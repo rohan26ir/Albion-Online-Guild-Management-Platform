@@ -294,7 +294,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-xs font-bold uppercase tracking-widest text-foreground">
-              Albion
+              Albion Game
             </span>
             <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">
               Guild Platform

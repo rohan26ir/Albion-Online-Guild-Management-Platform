@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Albion Online Guild Management Platform
+
+A modern, community-focused web app for Albion Online players, guild leaders, officers, and alliance members. This project brings together guild management, builds, marketplace tools, calculators, guides, and community pages into one polished Next.js experience.
+
+![Next.js](https://img.shields.io/badge/Next.js-16.2.7-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8?logo=tailwind-css)
+![shadcn/ui](https://img.shields.io/badge/shadcn-ui-111827)
+
+---
+
+## Live Demo
+
+- Website: https://albiongame.netlify.app/
+- Repository: https://github.com/rohan26ir/Albion-Online-Guild-Management-Platform
+
+---
+
+## What This Project Offers
+
+This platform is designed to support the Albion Online community with:
+
+- Guild and alliance management pages
+- Recruitment and application flows
+- Build library and community resource pages
+- Marketplace and trading-focused sections
+- Calculators, guides, and event pages
+- A clean dashboard area for community operations
+
+---
+
+## Core Features
+
+### Public Community Pages
+- Home / landing experience
+- Guild management overview
+- Alliance and recruitment pages
+- Builds, marketplace, calculators, guides, events, and profiles
+
+### Dashboard Area
+- Member and officer-focused sections
+- Event, builds, marketplace, applications, settings, and calculators views
+
+### UI / Experience
+- Responsive layout for desktop and mobile
+- Dark/light theme support
+- Clean card-based interface with shadcn/ui components
+- Fast frontend architecture with Next.js and Tailwind CSS
+
+---
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Radix UI primitives
+- next-themes
+- Lottie React
+- ESLint + Next.js config
+
+---
+
+## 📁 Project Structure
+
+```bash
+app/                # App Router pages and layouts
+components/         # Reusable UI and shared components
+hooks/              # Custom React hooks
+lib/                # Utility helpers
+public/             # Static assets and media
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### 4. Lint the project
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development Notes
 
-## Deploy on Vercel
+This repository currently focuses on the frontend experience of the Albion Online guild platform. The app is structured to scale into a richer full community management system over time.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Why This Project Matters
+
+The goal of this platform is to create a central hub where Albion Online players can:
+
+- manage community activities,
+- organize guild and alliance operations,
+- discover builds and guides,
+- explore trading and marketplace content,
+- and improve overall engagement in one modern interface.
+
+---
+
+## Author
+
+Developed by Mahedul Islam Rohan
+
+Portfolio: https://meetrohan.netlify.app/
+
+---
+
+## Summary
+
+Albion Online Guild Management Platform is a modern Next.js-based community portal designed to help players and guild leaders stay connected, organized, and informed in one place.

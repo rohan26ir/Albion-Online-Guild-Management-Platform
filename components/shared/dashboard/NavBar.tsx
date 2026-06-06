@@ -96,24 +96,24 @@ export default function Sidebar() {
       <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-border px-4">
 
         {/* home */}
-        <Tooltip>
-      <TooltipTrigger asChild>
-        <Link href="/" className="group flex items-center gap-2.5 shrink-0 cursor-pointer">
-          <IconHome2 stroke={2} />
-        </Link>
-      </TooltipTrigger>
-      <TooltipContent>
-        <p>Go Home</p>
-      </TooltipContent>
-    </Tooltip>
-        
+        {/* <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href="/" className="group flex items-center gap-2.5 shrink-0 cursor-pointer">
+              <IconHome2 stroke={2} />
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Go Home</p>
+          </TooltipContent>
+        </Tooltip> */}
+
 
         <SidebarTrigger className="shrink-0 md:hidden" />
 
         <div className="flex flex-col leading-none">
           {/* Search */}
-                     <SearchBar type="dashboard" /> 
-                {/* or "dashboard"/"default" */}
+          <SearchBar type="dashboard" />
+          {/* or "dashboard"/"default" */}
         </div>
         <button
           className="ml-auto flex gap-5 size-6 items-center justify-center text-muted-foreground hover:text-foreground transition-colors"

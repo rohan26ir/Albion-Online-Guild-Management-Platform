@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   IconMenu2,
-  // IconSearch,
   IconUser,
   IconX,
   IconLayoutDashboard,
@@ -28,21 +27,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import logo from "@/public/assets/logo/favicon.ico";
 import SearchBar from "../theme/SearchBar";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  // const [searchOpen, setSearchOpen] = useState(false);
 
   const websiteName: string = "Albion Online";
 
-  const menuItems: { name: string; href: string; icon: React.ReactNode }[] = [
-    { name: "Dashboard", href: "/dashboard", icon: <IconLayoutDashboard size={16} /> },
-    { name: "Marketplace", href: "/marketplace", icon: <IconBuildingStore size={16} /> },
-    { name: "Builds", href: "/builds", icon: <IconSword size={16} /> },
-    { name: "Calculators", href: "/calculators", icon: <IconCalculator size={16} /> },
-    { name: "Events", href: "/events", icon: <IconCalendarEvent size={16} /> },
+  const menuItems: { name: string; href: string }[] = [
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Marketplace", href: "/marketplace" },
+    { name: "Builds", href: "/builds" },
+    { name: "Calculators", href: "/calculators" },
+    { name: "Events", href: "/events" },
   ];
 
   const UserMenuItems: { name: string; href: string; icon: React.ReactNode; destructive?: boolean }[] = [
@@ -65,31 +70,29 @@ export default function Navbar() {
 
       <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:px-6">
         {/* ── Logo ── */}
-        <Link href="/" className="group flex items-center gap-2.5 shrink-0 group">
-          <div className="relative size-7 overflow-hidden  group-hover:border-primary/60 transition-colors duration-200">
+        <Link href="/" className="group flex items-center gap-2.5 shrink-0">
+          <div className="relative size-7 overflow-hidden transition-colors duration-200 group-hover:border-primary/60">
             <Image
               src={logo}
               alt={`${websiteName} logo`}
               fill
-              className="object-contain p-0.5 
-              group-hover:animate-pulse group-hover:scale-110 group-hover:grayscale-[20%] transition-all duration-300"
+              className="object-contain p-0.5 transition-all duration-300 group-hover:scale-110 group-hover:animate-pulse group-hover:grayscale-[20%]"
               priority
             />
           </div>
-          <span className="hidden sm:block text-sm font-semibold tracking-widest uppercase text-foreground/90 group-hover:text-foreground transition-colors duration-200">
+          <span className="hidden text-sm font-semibold uppercase tracking-widest text-foreground/90 transition-colors duration-200 group-hover:text-foreground sm:block">
             {websiteName}
           </span>
         </Link>
 
-        {/* ── Desktop Nav Links ── */}
-        <ul className="hidden md:flex items-center gap-0.5">
+        {/* ── Desktop Nav Links (no icons) ── */}
+        <ul className="hidden items-center gap-0.5 md:flex">
           {menuItems.map((item) => (
             <li key={item.name}>
               <Link
                 href={item.href}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 border border-transparent hover:border-border"
+                className="flex items-center px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-150 hover:text-foreground hover:bg-accent border border-transparent hover:border-border"
               >
-                {item.icon}
                 {item.name}
               </Link>
             </li>
@@ -99,7 +102,7 @@ export default function Navbar() {
           <li>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 border border-transparent hover:border-border outline-none">
+                <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-150 hover:text-foreground hover:bg-accent border border-transparent hover:border-border outline-none">
                   More
                   <IconChevronDown size={13} />
                 </button>
@@ -120,16 +123,14 @@ export default function Navbar() {
 
         {/* ── Right Actions ── */}
         <div className="flex items-center gap-1">
-          {/* Search */}
-           <SearchBar type="default" /> 
-      {/* or "dashboard"/"default" */}
+          <SearchBar type="default" />
 
           <ModeToggle />
 
           {userAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 border border-transparent hover:border-border outline-none">
+                <button className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-150 hover:text-foreground hover:bg-accent border border-transparent hover:border-border outline-none">
                   <IconUser size={15} />
                   <span className="hidden sm:inline">Account</span>
                   <IconChevronDown size={13} />
@@ -137,12 +138,11 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
                 {UserMenuItems.map((item, i) => (
-                  <>
-                    {i === UserMenuItems.length - 1 && (
-                      <DropdownMenuSeparator key={`sep-${i}`} />
+                  <div key={item.name}>
+                    {i === UserMenuItems.length - 1 && i !== 0 && (
+                      <DropdownMenuSeparator />
                     )}
                     <DropdownMenuItem
-                      key={item.name}
                       asChild
                       className={item.destructive ? "text-destructive focus:text-destructive" : ""}
                     >
@@ -151,7 +151,7 @@ export default function Navbar() {
                         {item.name}
                       </Link>
                     </DropdownMenuItem>
-                  </>
+                  </div>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -161,50 +161,96 @@ export default function Navbar() {
             </Button>
           )}
 
-          {/* Mobile hamburger */}
-          <button
-            className="flex md:hidden size-8 items-center justify-center border border-transparent hover:border-border hover:bg-accent text-muted-foreground hover:text-foreground transition-colors duration-150 ml-1"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <IconX size={16} /> : <IconMenu2 size={16} />}
-          </button>
+          {/* Mobile hamburger using Sheet component */}
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <button
+                className="ml-1 flex size-8 items-center justify-center border border-transparent text-muted-foreground transition-colors duration-150 hover:border-border hover:bg-accent hover:text-foreground md:hidden"
+                aria-label="Toggle menu"
+              >
+                <IconMenu2 size={16} />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] p-0">
+              <SheetHeader className="border-b border-border p-4 text-left">
+                <SheetTitle className="flex items-center gap-2.5">
+                  <div className="relative size-8 overflow-hidden">
+                    <Image
+                      src={logo}
+                      alt={`${websiteName} logo`}
+                      fill
+                      className="object-contain p-0.5"
+                      priority
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold uppercase tracking-widest">
+                      Albion
+                    </span>
+                    <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">
+                      Guild Platform
+                    </span>
+                  </div>
+                </SheetTitle>
+              </SheetHeader>
+
+              <div className="flex flex-col gap-6 p-4">
+                {/* Main Navigation */}
+                <div>
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Navigation
+                  </p>
+                  <ul className="space-y-1">
+                    {menuItems.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent rounded-md"
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Legal Links */}
+                <div>
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Legal
+                  </p>
+                  <ul className="space-y-1">
+                    {legalItems.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent rounded-md"
+                        >
+                          {item.icon}
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* User Section (if not authenticated) */}
+                {!userAuthenticated && (
+                  <Button
+                    size="sm"
+                    className="w-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign In
+                  </Button>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
-
-     
-
-      {/* ── Mobile Menu ── */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-background">
-          <ul className="divide-y divide-border">
-            {menuItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                >
-                  {item.icon}
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-            {legalItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                >
-                  {item.icon}
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </header>
   );
 }

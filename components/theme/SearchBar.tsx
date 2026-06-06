@@ -19,22 +19,23 @@ export default function SearchBar({ type }: { type: string }) {
   const router = useRouter();
 
   const navPublic: NavItem[] = [
-    { id: 1, page: "Home", path: "/" },
-    { id: 2, page: "About", path: "/about" },
-    { id: 3, page: "Contact", path: "/contact" },
-    { id: 4, page: "Services", path: "/services" },
-    { id: 5, page: "Blog", path: "/blog" },
-    { id: 6, page: "Privacy Policy", path: "/privacy-policy" },
-    { id: 7, page: "Terms of Service", path: "/terms-of-service" },
+    { id: 1, page: "Home",             path: "/" },
+    { id: 2, page: "Dashboard",        path: "/dashboard" },
+    { id: 3, page: "About",            path: "/about" },
+    { id: 4, page: "Contact",          path: "/contact" },
+    { id: 5, page: "Services",         path: "/services" },
+    { id: 6, page: "Blog",             path: "/blog" },
+    { id: 7, page: "Privacy Policy",   path: "/privacy-policy" },
+    { id: 8, page: "Terms of Service", path: "/terms-of-service" },
   ];
 
   const navDashboard: NavItem[] = [
-    { id: 1, page: "Dashboard", path: "/dashboard" },
-    { id: 2, page: "Profile", path: "/profile" },
-    { id: 3, page: "Settings", path: "/settings" },
-    { id: 4, page: "Notifications", path: "/notifications" },
-    { id: 5, page: "Messages", path: "/messages" },
-    { id: 6, page: "Logout", path: "/logout" },
+    { id: 1, page: "Dashboard",     path: "/dashboard" },
+    { id: 2, page: "Home",          path: "/" },
+    { id: 3, page: "Profile",       path: "/profile" },
+    { id: 4, page: "Settings",      path: "/settings" },
+    { id: 5, page: "Notifications", path: "/notifications" },
+    { id: 6, page: "Messages",      path: "/messages" },
   ];
 
   const navigations = type === "default" ? navPublic : navDashboard;
@@ -145,7 +146,7 @@ export default function SearchBar({ type }: { type: string }) {
       {/* Search Button (Ctrl+K trigger) */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-background border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-background border border-gray-200 dark:border-gray-600 rounded-lg  transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

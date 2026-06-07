@@ -40,15 +40,18 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Albion Guild Platform",
+    default: "Albion Game - Guild Management Platform",
     template: "%s | Albion Guild Platform",
   },
   description: "Comprehensive guild management platform for Albion Online players. Manage members, track events, share builds, and more.",
-  keywords: ["Albion Online", "Guild Management", "Gaming", "MMORPG", "Guild Tools"],
-  authors: [{ name: "Techtwen LLC", url: "https://techtwen.com" }],
-  creator: "Techtwen LLC",
+  keywords: ["Albion Online", "Albion Game", "Guild Management", "Gaming", "MMORPG", "Guild Tools"],
+  authors: [{ name: "M.I. Rohan", url: "https://meetrohan.netlify.app/" }],
+  creator: "Mahedul Islam Rohan",
   publisher: "Techtwen LLC",
   metadataBase: new URL("https://albion-guild-platform.com"),
+  verification: {
+    google: 'T6d9N8VnKTSWRrNwabEeMxtTMlp383yGz9V8MB7iH1E',
+  },
   openGraph: {
     title: "Albion Guild Platform",
     description: "Comprehensive guild management platform for Albion Online players",

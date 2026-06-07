@@ -37,38 +37,46 @@ import {
 import logo from "@/public/assets/logo/favicon.ico";
 import SearchBar from "../theme/SearchBar";
 
+
+interface navProps {
+  name: string;
+  href: string;
+  icon?: React.ReactNode;
+  destructive?: boolean;
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const websiteName: string = "Albion Online";
+  const websiteName: string = "Albion Game";
 
-  const menuItems: { name: string; href: string }[] = [
-    { name: "Dashboard", href: "/dashboard" },
+  const menuItems: navProps[] = [
+    // { name: "Dashboard", href: "/dashboard" },
     { name: "Marketplace", href: "/marketplace" },
     { name: "Builds", href: "/builds" },
     { name: "Calculators", href: "/calculators" },
     { name: "Events", href: "/events" },
   ];
 
-  const UserMenuItems: { name: string; href: string; icon: React.ReactNode; destructive?: boolean }[] = [
+  const UserMenuItems: navProps[] = [
     { name: "Profile", href: "/profile", icon: <IconUser size={16} /> },
     { name: "Settings", href: "/settings", icon: <IconSettings size={16} /> },
     { name: "Logout", href: "/logout", icon: <IconLogout size={16} />, destructive: true },
   ];
 
-  const legalItems = [
+  const legalItems: navProps[] = [
     { name: "Privacy Policy", href: "/privacy-policy", icon: <IconShield size={16} /> },
     { name: "Terms & Conditions", href: "/terms-conditions", icon: <IconFileText size={16} /> },
   ];
 
-  const userAuthenticated: boolean = true;
+  const userAuthenticated: boolean = false;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-sm">
       {/* Top accent line */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-60" />
+      <div className="h-0.5 w-full bg-linear-to-r from-transparent via-primary to-transparent opacity-60" />
 
-      <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:px-6">
+      <nav className="max-w-7xl w-[95%] mx-auto flex h-14 items-center justify-between ">
         {/* ── Logo ── */}
         <Link href="/" className="group flex items-center gap-2.5 shrink-0">
           <div className="relative size-7 overflow-hidden transition-colors duration-200 group-hover:border-primary/60">
@@ -76,7 +84,7 @@ export default function Navbar() {
               src={logo}
               alt={`${websiteName} logo`}
               fill
-              className="object-contain p-0.5 transition-all duration-300 group-hover:scale-110 group-hover:animate-pulse group-hover:grayscale-[20%]"
+              className="object-contain p-0.5 transition-all duration-300 group-hover:scale-110 group-hover:animate-pulse group-hover:grayscale-20"
               priority
             />
           </div>
@@ -156,9 +164,11 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" className="h-8 px-3 text-xs font-semibold uppercase tracking-wider">
+            <Link href="/login">
+              <Button size="sm" className="h-8 px-3 text-xs font-semibold uppercase tracking-wider">
               Sign In
             </Button>
+            </Link>
           )}
 
           {/* Mobile hamburger using Sheet component */}
@@ -171,7 +181,7 @@ export default function Navbar() {
                 <IconMenu2 size={16} />
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] p-0">
+            <SheetContent side="left" className="w-70 p-0">
               <SheetHeader className="border-b border-border p-4 text-left">
                 <SheetTitle className="flex items-center gap-2.5">
                   <div className="relative size-8 overflow-hidden">
@@ -238,6 +248,7 @@ export default function Navbar() {
 
                 {/* User Section (if not authenticated) */}
                 {!userAuthenticated && (
+                  <Link href="/login" >
                   <Button
                     size="sm"
                     className="w-full"
@@ -245,6 +256,7 @@ export default function Navbar() {
                   >
                     Sign In
                   </Button>
+                  </Link>
                 )}
               </div>
             </SheetContent>

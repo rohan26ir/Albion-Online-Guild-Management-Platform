@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { CookieHub } from "@/components/CookieHub";
 
 // Font configurations
 const geistSans = Geist({
@@ -125,7 +126,8 @@ export default function RootLayout({
           storageKey="albion-theme"
         >
           <TooltipProvider delayDuration={0}>
-            <GoogleAnalytics></GoogleAnalytics>
+            <GoogleAnalytics />
+            <CookieHub />
             {children}
           </TooltipProvider>
         </ThemeProvider>

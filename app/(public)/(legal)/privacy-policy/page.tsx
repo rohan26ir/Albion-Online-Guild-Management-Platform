@@ -1,8 +1,23 @@
+import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
 export default function page() {
   return(
-    <div>
-      <h2>Privacy Policy</h2>     
-    </div>
+    <section>
+          <div className="max-w-7xl w-[95%] mx-auto py-10 ">
+    
+            {/* content */}
+            <div>
+              <h2 className="text-xl font-bold">Privacy Policy</h2>
+            </div>
+    
+            {/* under constraction */}
+            <div className='max-w-7xl w-[95%] mx-auto mt-20'>
+              <UnderDevelopment
+                progress={55}
+              ></UnderDevelopment>
+            </div>
+    
+          </div>
+        </section>
   )
 }

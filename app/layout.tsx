@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { CookieHub } from "@/components/CookieHub";
+import PopUp from "@/components/shared/PopUp";
 
 // Font configurations
 const geistSans = Geist({
@@ -127,8 +128,11 @@ export default function RootLayout({
         >
           <TooltipProvider delayDuration={0}>
             <GoogleAnalytics />
-            <CookieHub />
+            {/* <CookieHub /> */}
+            <PopUp />
+
             {children}
+          
           </TooltipProvider>
         </ThemeProvider>
       </body>

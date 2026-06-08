@@ -53,7 +53,7 @@ export default function Navbar() {
   const menuItems: navProps[] = [
     // { name: "Dashboard", href: "/dashboard" },
     { name: "Marketplace", href: "/marketplace" },
-    { name: "Builds", href: "/builds" },
+    { name: "Tutorials", href: "/tutorials" },
     { name: "Calculators", href: "/calculators" },
     { name: "Events", href: "/events" },
   ];

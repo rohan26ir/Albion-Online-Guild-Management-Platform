@@ -81,7 +81,7 @@ export default function TimeCounter({
   // Default version with days
   return (
     <div className={`flex items-center gap-1.5 ${className}`}>
-      <span className="font-mono font-medium text-foreground">
+      <span className="font-mono font-medium  ">
         {timeLeft.days > 0 && `${timeLeft.days}d-`}
         {formatNumber(timeLeft.hours)}:{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}
       </span>

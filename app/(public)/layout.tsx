@@ -13,7 +13,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     <div className="min-h-screen flex flex-col">
       <Navbar />
       {/* <UnderDevelopment progress={28} /> */}
-      <main className="grow mb-10 mt-2">
+      <main className="grow mb-0 ">
         <AnimatePresence mode="wait">
           <motion.div
             key={pathName}

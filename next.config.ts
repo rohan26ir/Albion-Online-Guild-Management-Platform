@@ -6,23 +6,27 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "via.placeholder.com",
-        port: "",
-        pathname: "/**",
       },
-      // Add other hosts you might need, like imgbb.com
       {
         protocol: "https",
         hostname: "i.ibb.co",
-        port: "",
-        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "api.dicebear.com",
-        port: "",
-        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
       },
     ],
+    // Add sizes for better performance
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 };
 

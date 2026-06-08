@@ -18,7 +18,7 @@ interface PopUpProps {
 export default function PopUp({ 
   launchDate = "2026-06-30T17:00:00",
   title = "Something Epic is Coming",
-  description = "We're rebuilding the ultimate experience for the Albion Online community. Launching soon.",
+  description = "This website is currently under development. We're working hard to bring you something great. Stay tuned!",
   showEveryVisit = false,
   backgroundImage = "https://images.unsplash.com/photo-1614850523459-c2f1c7a3d3e1?q=80&w=2070&auto=format&fit=crop"
 }: PopUpProps) {
@@ -75,14 +75,14 @@ export default function PopUp({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.88, y: 50 }}
             transition={{ type: "spring", damping: 28, stiffness: 280 }}
-            className="fixed left-1/2 top-1/2  z-50 w-[95%] max-w-5xl 
+            className="fixed left-1/2 top-1/2  z-50 w-[95%] max-w-7xl 
                        -translate-x-1/2 -translate-y-1/2 
-                       overflow-hidden rounded-3xl shadow-2xl h-[70lvh] my-auto "
+                       overflow-hidden rounded-3xl shadow-2xl h-[80%] max-h-[350px] my-auto "
           >
-            <div className="relative flex h-auto min-h-140 flex-col overflow-hidden rounded-3xl lg:flex-row lg:items-start ">
+            <div className="relative flex flex-col overflow-hidden rounded-3xl lg:flex-row lg:items-start ">
               
               {/* Left Side - Lottie Animation */}
-              <div className="relative flex w-full items-center justify-center bg-white p-2 md:p-8 lg:w-5/12">
+              <div className="relative flex w-full items-center justify-center bg-white p-2 md:p-8 lg:w-5/12 h-full ">
                 <div 
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
                   style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -94,7 +94,7 @@ export default function PopUp({
                   transition={{ delay: 0.1, duration: 0.7 }}
                   className="relative z-10"
                 >
-                  <div className="mx-auto w-40 h-40 md:w-80 md:h-130 overflow-hidden">
+                  <div className="mx-auto w-80 h-85 overflow-hidden">
                     <Lottie 
                       animationData={underDev} 
                       loop 
@@ -105,7 +105,7 @@ export default function PopUp({
               </div>
 
               {/* Right Side - Content */}
-              <div className="relative flex w-full flex-col justify-center bg-gradient-to-br from-zinc-950 to-black p-8 lg:w-7/12 lg:p-12">
+              <div className="relative flex w-full flex-col justify-center bg-black p-8 lg:w-7/12 lg:p-12">
                 {/* Close Button */}
                 <motion.button
                   whileHover={{ scale: 1.1 }}

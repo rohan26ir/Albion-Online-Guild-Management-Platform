@@ -60,13 +60,13 @@ export const FAQ: React.FC<FAQProps> = ({
       {...props}
     >
 
-      <div className="absolute inset-0 -z-10 brightness-75">
+      <div className="absolute inset-0 -z-10 brightness-55">
         {/* <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/70" /> */}
         <Image
           src={bgwar}
           alt="Albion Online Background"
           fill
-          className="object-cover brightness-35"
+          className="object-cover brightness-75"
           priority
         />
       </div>
@@ -116,7 +116,7 @@ const FAQTabs: React.FC<FAQTabsProps> = ({ categories, selected, setSelected }) 
           "relative overflow-hidden whitespace-nowrap rounded-md border px-3 py-1.5 text-sm font-medium transition-colors duration-500",
           selected === key
             ? "border-primary text-background"
-            : "border-border bg-transparent text-muted-foreground hover:text-foreground"
+            : "border-border bg-transparent text-accent hover:text-foreground"
         )}
       >
         <span className="relative z-10">{label}</span>

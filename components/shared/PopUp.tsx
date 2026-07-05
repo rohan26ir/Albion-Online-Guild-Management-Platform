@@ -16,7 +16,7 @@ interface PopUpProps {
 }
 
 export default function PopUp({ 
-  launchDate = "2026-06-30T17:00:00",
+  launchDate = "2026-07-30T17:00:00",
   title = "Something Epic is Coming",
   description = "This website is currently under development. We're working hard to bring you something great. Stay tuned!",
   showEveryVisit = false,

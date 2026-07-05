@@ -9,6 +9,7 @@ import herobg from '@/public/assets/background/hero.webp'
 import heroImage1 from "@/public/assets/games/buildin/home.webp";
 import heroImage2 from "@/public/assets/games/buildin/home2.webp";
 import heroImage3 from "@/public/assets/games/buildin/home3.webp";
+import ButtonLight from "../Button/ButtonLight";
 
 interface AnimatedMarqueeHeroProps {
   tagline: string;
@@ -19,15 +20,6 @@ interface AnimatedMarqueeHeroProps {
   className?: string;
 }
 
-const ActionButton = ({ children }: { children: React.ReactNode }) => (
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="mt-8 px-8 py-3 rounded-full bg-red-500 text-white font-semibold shadow-lg transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
-  >
-    {children}
-  </motion.button>
-);
 
 export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
   tagline,
@@ -70,7 +62,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
   return (
     <section
       className={cn(
-        "relative w-full h-[60lvh] md:h-[90lvh] 2xl:h-[70lvh] overflow-hidden rounded-lg text-center px-4",
+        "relative w-full h-[60lvh] md:h-[90lvh] 2xl:h-[100lvh] overflow-hidden rounded-lg text-center px-4",
         className
       )}
     >
@@ -91,7 +83,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
-          className="mb-4 inline-block rounded-full border border-gray-700 bg-gray-800/50 px-4 py-1.5 text-sm font-medium text-gray-300 backdrop-blur-sm"
+          className="mb-4 inline-block rounded-full border border-gray-700 bg-black px-4 py-1.5 text-sm font-medium text-gray-300 backdrop-blur-sm"
         >
           {tagline}
         </motion.div>
@@ -135,11 +127,13 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.6 }}
-          className="-mt-5"
+          className="-mt-5 md:mt-10"
         >
           {ctaUrl ? 
-            <Link href={ctaUrl} target="_blank"><ActionButton>{ctaText}</ActionButton></Link> : 
-            <ActionButton>{ctaText}</ActionButton>
+            <Link href={ctaUrl} target="_blank">
+              <ButtonLight>{ctaText}</ButtonLight>
+            </Link> : 
+            <ButtonLight>{ctaText}</ButtonLight>
           }
         </motion.div>
 

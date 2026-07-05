@@ -120,7 +120,7 @@ export function Pricing() {
                   key={plan.id}
                   className={cn(
                     "w-full px-4 pt-5 pb-4 transition-all duration-300",
-                    plan.featured && "relative rounded-lg border shadow-lg scale-105 bg-gradient-to-b from-primary/5 to-transparent"
+                    plan.featured && "relative rounded-lg border shadow-lg scale-105 bg-linear-to-b from-primary/5 to-transparent"
                   )}
                 >
                   {plan.featured && (

@@ -29,7 +29,8 @@ export default function Footer() {
 
   const currentYear: number = new Date().getFullYear();
   const version: string = "1.0.0";
-  const companyName: string = "TechTwen LLC";
+  const companyName: string = "Techtwen LLC";
+  const companyURl: string = "https://meetrohan.netlify.app/";
 
   const contactInfo: footerProps[] = [
     { id: 1, name: "Email", value: "info@techtwen.com" },
@@ -156,7 +157,9 @@ export default function Footer() {
             </div>
             <div className=" pt-2 text-xs text-muted-foreground flex flex-wrap items-center justify-start gap-2 ">
               <p className="group">Version: <span className="group-hover:text-lime-500">{version}</span></p> -
-              <p className="group"><span className="group-hover:text-lime-500">© {currentYear}</span> {companyName}</p>
+              <p className="group"><span className="group-hover:text-lime-500">© {currentYear}</span>   <a href={companyURl} target="_blank" rel="noopener noreferrer" className="group-hover:text-rose-500">
+                {companyName}
+              </a></p>
               {/* <p className="mt-1 text-[10px]">
                 Built with <IconHeart size={10} className="inline text-red-500" /> for Albion Community
               </p> */}

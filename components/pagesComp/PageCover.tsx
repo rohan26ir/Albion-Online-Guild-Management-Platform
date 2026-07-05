@@ -1,7 +1,7 @@
 import bgImage from '@/public/assets/background/war.webp'
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
-export default function PageCover({ title, description, backgroundImage, ...props }: { title: string; description: string; backgroundImage?: string } & React.HTMLAttributes<HTMLDivElement>) {
+export default function PageCover({ title, description, backgroundImage, ...props }: { title: string; description: string; backgroundImage?: string | StaticImageData } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className="relative w-full h-[35lvh] md:h-[90lvh] 2xl:h-[40lvh] overflow-hidden rounded-lg text-center px-4"
       style={{ backgroundImage: `url(${backgroundImage})` }}

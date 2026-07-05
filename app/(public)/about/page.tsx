@@ -2,7 +2,7 @@ import AboutOurAchievements from "@/components/pagesComp/AboutOurAchievements";
 import AboutOurStory from "@/components/pagesComp/AboutOurStory";
 import AboutOurValues from "@/components/pagesComp/AboutOurValues";
 import PageCover from "@/components/pagesComp/PageCover";
-import UnderDevelopment from "@/components/shared/UnderDevelopment";
+// import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
 export default function page() {
   return (

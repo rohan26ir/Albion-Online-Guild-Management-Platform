@@ -1,13 +1,14 @@
+// components/customComp/FilterBar.tsx
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { IoSearch, IoClose, IoFilter } from 'react-icons/io5';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-// import { Slider } from '@/components/ui/slider';
+import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 
 // Constants
@@ -102,12 +103,6 @@ export default function FilterBar({
   showAdvanced = false,
 }: FilterBarProps) {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(showAdvanced);
-  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
-
-  // Sync local search term with prop
-  useEffect(() => {
-    setLocalSearchTerm(searchTerm);
-  }, [searchTerm]);
 
   const hasActiveFilters = useMemo(() => {
     return (
@@ -134,19 +129,7 @@ export default function FilterBar({
     return count;
   }, [searchTerm, selectedCategory, selectedTier, selectedQuality, selectedType, selectedEnchantment, priceRange]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalSearchTerm(value);
-    onSearchChange(value);
-  };
-
-  const handleSearchClear = () => {
-    setLocalSearchTerm('');
-    onSearchChange('');
-  };
-
   const handleClearAll = () => {
-    setLocalSearchTerm('');
     onSearchChange('');
     onCategoryChange('all');
     onTierChange('all');
@@ -192,32 +175,25 @@ export default function FilterBar({
         <div className="space-y-4">
           {/* Basic Filters */}
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search Input */}
             <div className="relative flex-1">
-              <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <IoSearch className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search items by name, ID, or category..."
-                value={localSearchTerm}
-                onChange={handleSearchChange}
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
                 className="pl-10 pr-10 bg-muted/30"
               />
-              {localSearchTerm && (
+              {searchTerm && (
                 <button
-                  onClick={handleSearchClear}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => onSearchChange('')}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                 >
                   <IoClose className="h-4 w-4" />
                 </button>
               )}
             </div>
 
-            {/* Subcategory Filter */}
-            <Select 
-              value={selectedCategory} 
-              onValueChange={(value) => {
-                onCategoryChange(value);
-              }}
-            >
+            <Select value={selectedCategory} onValueChange={onCategoryChange}>
               <SelectTrigger className="w-full md:w-56 bg-muted/30">
                 <SelectValue placeholder="Subcategory" />
               </SelectTrigger>
@@ -229,13 +205,7 @@ export default function FilterBar({
               </SelectContent>
             </Select>
 
-            {/* Tier Filter */}
-            <Select 
-              value={selectedTier} 
-              onValueChange={(value) => {
-                onTierChange(value);
-              }}
-            >
+            <Select value={selectedTier} onValueChange={onTierChange}>
               <SelectTrigger className="w-full md:w-44 bg-muted/30">
                 <SelectValue placeholder="Tier" />
               </SelectTrigger>
@@ -260,12 +230,7 @@ export default function FilterBar({
                 {/* Quality Filter */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Quality</Label>
-                  <Select 
-                    value={selectedQuality} 
-                    onValueChange={(value) => {
-                      onQualityChange(value);
-                    }}
-                  >
+                  <Select value={selectedQuality} onValueChange={onQualityChange}>
                     <SelectTrigger className="bg-muted/30">
                       <SelectValue placeholder="Select Quality" />
                     </SelectTrigger>
@@ -283,12 +248,7 @@ export default function FilterBar({
                 {/* Item Type Filter */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Item Type</Label>
-                  <Select 
-                    value={selectedType} 
-                    onValueChange={(value) => {
-                      onTypeChange(value);
-                    }}
-                  >
+                  <Select value={selectedType} onValueChange={onTypeChange}>
                     <SelectTrigger className="bg-muted/30">
                       <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
@@ -308,9 +268,7 @@ export default function FilterBar({
                   <Label className="text-sm font-medium">Enchantment Level</Label>
                   <Select 
                     value={selectedEnchantment?.toString() || '0'} 
-                    onValueChange={(value) => {
-                      onEnchantmentChange(parseInt(value));
-                    }}
+                    onValueChange={(value) => onEnchantmentChange(parseInt(value))}
                   >
                     <SelectTrigger className="bg-muted/30">
                       <SelectValue placeholder="Select Enchantment" />
@@ -326,11 +284,85 @@ export default function FilterBar({
                 </div>
               </div>
 
-              
+              {/* Price Range Filter */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium">Price Range (Silver)</Label>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>{priceRange[0].toLocaleString()}</span>
+                    <span>-</span>
+                    <span>{priceRange[1].toLocaleString()}</span>
+                  </div>
+                </div>
+                <Slider
+                  min={0}
+                  max={1000000}
+                  step={1000}
+                  value={priceRange}
+                  onValueChange={(value) => onPriceRangeChange(value as [number, number])}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>0</span>
+                  <span>500k</span>
+                  <span>1M</span>
+                </div>
+              </div>
 
-             
-
-
+              {/* Quick Filter Tags */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                <span className="text-xs text-muted-foreground mr-2">Quick filters:</span>
+                <Badge 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-accent"
+                  onClick={() => {
+                    onTierChange('4');
+                    onQualityChange('Excellent');
+                  }}
+                >
+                  Tier 4 Excellent
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-accent"
+                  onClick={() => {
+                    onTierChange('6');
+                    onQualityChange('Masterpiece');
+                  }}
+                >
+                  Tier 6 Masterpiece
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-accent"
+                  onClick={() => {
+                    onEnchantmentChange(3);
+                    onPriceRangeChange([50000, 500000]);
+                  }}
+                >
+                  Enchanted ⭐⭐⭐
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-accent"
+                  onClick={() => {
+                    onTypeChange('weapon');
+                    onPriceRangeChange([100000, 1000000]);
+                  }}
+                >
+                  High-end Weapons
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-accent"
+                  onClick={() => {
+                    onPriceRangeChange([0, 100000]);
+                    onQualityChange?.('Normal');
+                  }}
+                >
+                  Budget Items
+                </Badge>
+              </div>
             </div>
           )}
         </div>

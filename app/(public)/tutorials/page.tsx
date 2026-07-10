@@ -126,8 +126,12 @@ const tutorialsData: Tutorial[] = [
 
 export default function TutorialsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedTier, setSelectedTier] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"vote" | "newest">("vote");
+
+  const uniqueSubcategories = ["all", ...Array.from(new Set(tutorialsData.map((tutorial) => tutorial.category)))];
+  const uniqueTiers = ["all"];
 
   const filteredAndSortedTutorials = useMemo(() => {
     
@@ -165,12 +169,20 @@ export default function TutorialsPage() {
 
         {/* Filter Bar */}
         <FilterBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          searchTerm={searchQuery}
+          onSearchChange={setSearchQuery}
           selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
+          onCategoryChange={setSelectedCategory}
+          selectedTier={selectedTier}
+          onTierChange={() => {}}
+          uniqueSubcategories={uniqueSubcategories}
+          uniqueTiers={uniqueTiers}
+          onClearFilters={() => {
+            setSearchQuery('');
+            setSelectedCategory('all');
+            setSelectedTier('all');
+          }}
+          showAdvanced={false}
         />
 
         <div className="mt-8 mb-6 text-sm text-muted-foreground">

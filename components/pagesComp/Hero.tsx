@@ -62,12 +62,12 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
   return (
     <section
       className={cn(
-        "relative w-full h-[60lvh] md:h-[90lvh] 2xl:h-[100lvh] overflow-hidden rounded-lg text-center px-4",
+        "relative w-full h-[60lvh] md:h-[90lvh] 2xl:h-lvh overflow-hidden rounded-lg text-center px-4",
         className
       )}
     >
       <div className="absolute inset-0 -z-10 brightness-75">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/70" />
+        <div className="absolute inset-0 bg-linear-to-br from-black/80 via-black/60 to-black/70" />
         <Image 
           src={herobg} 
           alt="Albion Online Background" 
@@ -83,7 +83,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
-          className="mb-4 inline-block rounded-full border border-gray-700 bg-black px-4 py-1.5 text-sm font-medium text-gray-300 backdrop-blur-sm"
+          className="mb-2 inline-block rounded-full border border-gray-700 bg-black px-4 py-1 text-sm font-medium text-gray-300 backdrop-blur-sm "
         >
           {tagline}
         </motion.div>
@@ -93,14 +93,14 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={STAGGER_CHILDREN_VARIANTS}
-          className="text-5xl md:text-7xl font-bold tracking-tighter text-white"
+          className="text-5xl md:text-7xl font-bold tracking-normal text-white "
         >
           {typeof title === 'string' ? (
             title.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 variants={FADE_IN_ANIMATION_VARIANTS}
-                className="inline-block"
+                className="inline-block "
               >
                 {word}&nbsp;
               </motion.span>
@@ -116,7 +116,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.5 }}
-          className="mt-4 max-w-xl text-lg text-gray-300"
+          className="mt-2 max-w-xl text-lg text-gray-300"
         >
           {description}
         </motion.p>
@@ -127,7 +127,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.6 }}
-          className="-mt-5 md:mt-10"
+          className="-mt-5 md:mt-5 2xl:mt-10"
         >
           {ctaUrl ? 
             <Link href={ctaUrl} target="_blank">

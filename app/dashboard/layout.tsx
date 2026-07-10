@@ -25,11 +25,11 @@ export default function DashboardLayout({
           <div className="flex-1 w-[95%] my-5 mx-auto overflow-y-auto bg-background">
             {children}
             <div>
-          <UnderDevelopment
+              {/* <UnderDevelopment
             dev="Rohan"
             progress={75}
-          />
-        </div>
+          /> */}
+            </div>
           </div>
           <Footer></Footer>
         </main>

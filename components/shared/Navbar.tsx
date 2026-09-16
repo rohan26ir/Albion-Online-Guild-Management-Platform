@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 import {
   IconMenu2,
   IconUser,
@@ -59,8 +60,9 @@ export default function Navbar() {
   ];
 
   const UserMenuItems: navProps[] = [
-    { name: "Profile", href: "/profile", icon: <IconUser size={16} /> },
-    { name: "Settings", href: "/settings", icon: <IconSettings size={16} /> },
+    { name: "Dashboard", href: "/dashboard", icon: <IconLayoutDashboard size={16} /> },
+    { name: "Profile", href: "/dashboard/profile", icon: <IconUser size={16} /> },
+    { name: "Settings", href: "/dashboard/settings", icon: <IconSettings size={16} /> },
     { name: "Logout", href: "/logout", icon: <IconLogout size={16} />, destructive: true },
   ];
 
@@ -69,7 +71,22 @@ export default function Navbar() {
     { name: "Terms & Conditions", href: "/terms-conditions", icon: <IconFileText size={16} /> },
   ];
 
-  const userAuthenticated: boolean = false;
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUserAuthenticated(!!data?.user);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserAuthenticated(!!session?.user);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-sm">
@@ -246,16 +263,27 @@ export default function Navbar() {
                   </ul>
                 </div>
 
-                {/* User Section (if not authenticated) */}
-                {!userAuthenticated && (
-                  <Link href="/login" >
-                  <Button
-                    size="sm"
-                    className="w-full"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Sign In
-                  </Button>
+                {/* User Section */}
+                {userAuthenticated ? (
+                  <div className="space-y-2 pt-2 border-t border-border">
+                    <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
+                      <Button size="sm" className="w-full gap-2 mb-2">
+                        <IconLayoutDashboard size={16} />
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Link href="/logout" onClick={() => setMobileOpen(false)}>
+                      <Button variant="outline" size="sm" className="w-full gap-2 text-destructive hover:text-destructive">
+                        <IconLogout size={16} />
+                        Sign Out
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <Link href="/login" onClick={() => setMobileOpen(false)}>
+                    <Button size="sm" className="w-full">
+                      Sign In
+                    </Button>
                   </Link>
                 )}
               </div>

@@ -43,7 +43,7 @@ export default function DashboardPage() {
   if (!data) {
     return <DashboardSkeleton />
   }
-  
+
   return (
     <motion.div
       variants={containerVariants}

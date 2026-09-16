@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   IconBuildingStore,
   IconCalculator,
@@ -76,6 +78,43 @@ type NavPage = {
 export default function Sidebar() {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [currentUser, setCurrentUser] = useState<{
+    name: string;
+    email: string;
+    initials: string;
+    avatarUrl?: string;
+  }>({
+    name: "Adventurer",
+    email: "player@albion.com",
+    initials: "AO",
+    avatarUrl: "",
+  });
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        const metadata = data.user.user_metadata || {};
+        const name = metadata.full_name || metadata.name || metadata.username || data.user.email?.split("@")[0] || "Player";
+        const email = data.user.email || "";
+        const avatarUrl =
+          metadata.avatar_url ||
+          metadata.picture ||
+          (typeof metadata.picture === "object" ? metadata.picture?.data?.url : undefined) ||
+          data.user.identities?.[0]?.identity_data?.avatar_url ||
+          data.user.identities?.[0]?.identity_data?.picture ||
+          "";
+
+        const initials = name
+          .split(" ")
+          .map((n: string) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2) || "AO";
+        setCurrentUser({ name, email, initials, avatarUrl });
+      }
+    });
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -115,16 +154,57 @@ export default function Sidebar() {
           <SearchBar type="dashboard" />
           {/* or "dashboard"/"default" */}
         </div>
-        <button
-          className="ml-auto flex gap-5 size-6 items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Notifications"
-        >
-          {/* ModeToggle */}
-          <ModeToggle></ModeToggle>
+        <div className="ml-auto flex items-center gap-3">
+          <ModeToggle />
+          <Notification />
 
-          {/* <IconBell size={14} /> */}
-          <Notification></Notification>
-        </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer">
+                <Avatar className="size-8 border border-border hover:opacity-90 transition-opacity">
+                  {currentUser.avatarUrl ? (
+                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} className="object-cover" />
+                  ) : null}
+                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+                    {currentUser.initials}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="border-b border-border px-3 py-2 flex items-center gap-2.5">
+                <Avatar className="size-9 border border-border shrink-0">
+                  {currentUser.avatarUrl ? (
+                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} className="object-cover" />
+                  ) : null}
+                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+                    {currentUser.initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col min-w-0">
+                  <p className="text-xs font-semibold text-foreground truncate">{currentUser.name}</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{currentUser.email}</p>
+                </div>
+              </div>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile" className="flex items-center gap-2 text-xs cursor-pointer">
+                  <IconUser size={14} /> Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings" className="flex items-center gap-2 text-xs cursor-pointer">
+                  <IconSettings size={14} /> Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/logout" className="flex items-center gap-2 text-xs text-destructive focus:text-destructive cursor-pointer">
+                  <IconLogout size={14} /> Sign Out
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
 

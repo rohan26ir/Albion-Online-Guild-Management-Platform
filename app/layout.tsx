@@ -51,14 +51,14 @@ export const metadata: Metadata = {
   authors: [{ name: "M.I. Rohan", url: "https://meetrohan.netlify.app/" }],
   creator: "Mahedul Islam Rohan",
   publisher: "Techtwen LLC",
-  metadataBase: new URL("https://albion-guild-platform.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://albiongame.netlify.app"),
   verification: {
     google: 'T6d9N8VnKTSWRrNwabEeMxtTMlp383yGz9V8MB7iH1E',
   },
   openGraph: {
     title: "Albion Game - The All-in-One Gaming Platform",
     description: "The All-in-One Gaming Platform for Albion Online players. Marketplace prices, crafting calculators, PvP/PvE builds, guild management, interactive maps, and community tools.",
-    url: "https://albion-guild-platform.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://albiongame.netlify.app",
     siteName: "Albion Game - The All-in-One Gaming Platform",
     images: [
       {

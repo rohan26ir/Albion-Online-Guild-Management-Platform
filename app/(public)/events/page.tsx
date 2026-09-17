@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Events",
+  description: "Browse upcoming Albion Online community events, tournaments, and guild battle operations.",
+};
 
 export default function EventsPage() {
   return (

@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
+export const metadata: Metadata = {
+  title: "Event Calendar",
+  description: "Albion Online guild event calendar, castle timers, and ZvZ schedule.",
+};
 
 export default function page() {
   return (

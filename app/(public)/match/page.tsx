@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import TimeCounter from "@/components/customComp/TimeCounter";
+
+export const metadata: Metadata = {
+  title: "Player & Guild Matchmaker",
+  description: "Find your next Albion Online guild, party, or roaming squad with our interactive matchmaker.",
+};
 
 export default function page() {
   return (

@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Guild Recruitment',
+  description: 'Join top Albion Online guilds: apply for active PvP, PvE, gathering, and crafting teams.',
+};
+
 export default function RecruitmentPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

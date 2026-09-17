@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Economic Calculators",
+  description: "Calculate crafting returns, refining profit, fame spec progression, and trade flipping margins in Albion Online.",
+};
 
 export default function CalculatorsPage() {
   return (

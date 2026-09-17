@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Events & Schedules',
+  description: 'Manage Albion Online guild events, raid schedules, and attendance planning.',
+};
+
 export default function DashboardEventsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

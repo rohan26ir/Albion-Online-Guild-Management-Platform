@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import ContactCard from "@/components/pagesComp/ContactCard";
 import PageCover from "@/components/pagesComp/PageCover";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with the Albion Game development and support team.",
+};
 
 export default function page() {
   return (

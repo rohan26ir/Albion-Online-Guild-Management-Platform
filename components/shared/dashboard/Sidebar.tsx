@@ -360,6 +360,7 @@ const groups: NavGroup[] = [
         icon: <IconCalculator size={18} />,
         children: [
           { title: "All Calculators", href: "/dashboard/calculators", icon: <IconCalculator size={16} /> },
+          { title: "Buy / Sell Profit", href: "/dashboard/calculators/trade-profit", icon: <IconArrowsExchange size={16} /> },
           { title: "Crafting Profit", href: "/dashboard/calculators/crafting", icon: <IconHammer size={16} /> },
           { title: "Refining Profit", href: "/dashboard/calculators/refining", icon: <IconScissors size={16} /> },
           { title: "Fame & Spec", href: "/dashboard/calculators/fame", icon: <IconFlame size={16} /> },
@@ -402,6 +403,21 @@ const groups: NavGroup[] = [
         title: "Settings",
         href: "/dashboard/settings",
         icon: <IconSettings size={18} />,
+      },
+    ],
+  },
+  {
+    title: "Admin Portal",
+    pages: [
+      {
+        title: "Admin Panel",
+        href: "/dashboard/admin",
+        icon: <IconShield size={18} />,
+        children: [
+          { title: "Overview", href: "/dashboard/admin", icon: <IconLayoutDashboard size={16} /> },
+          { title: "Items (ImgBB)", href: "/dashboard/admin/items", icon: <IconSword size={16} /> },
+          { title: "Builds (Game UI)", href: "/dashboard/admin/builds", icon: <IconSwords size={16} /> },
+        ],
       },
     ],
   },
@@ -478,7 +494,7 @@ export function AppSidebar() {
                 Albion Game
               </span>
               <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">
-                Market, Guild & Others
+                All-in-One Gaming Platform
               </span>
             </div>
           </div>

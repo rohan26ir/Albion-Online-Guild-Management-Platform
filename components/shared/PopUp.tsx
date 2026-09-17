@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lottie from 'lottie-react';
 import { IconX, IconCalendarClock, IconRocket } from '@tabler/icons-react';
@@ -15,25 +16,34 @@ interface PopUpProps {
   backgroundImage?: string;
 }
 
-export default function PopUp({ 
-  launchDate = "2026-07-30T17:00:00",
+export default function PopUp({
+  launchDate = "2026-11-26T17:00:00",
   title = "Something Epic is Coming",
   description = "This website is currently under development. We're working hard to bring you something great. Stay tuned!",
   showEveryVisit = false,
   backgroundImage = "https://images.unsplash.com/photo-1614850523459-c2f1c7a3d3e1?q=80&w=2070&auto=format&fit=crop"
 }: PopUpProps) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [email, setEmail] = useState("");
 
+  const isAuthPage =
+    pathname?.startsWith('/login') ||
+    pathname?.startsWith('/register') ||
+    pathname?.startsWith('/forgot-password');
+
   useEffect(() => {
+    if (isAuthPage) return;
     const hasSeenPopup = localStorage.getItem('hasSeenLaunchPopup');
-    
+
     if (!hasSeenPopup || showEveryVisit) {
       const timer = setTimeout(() => setIsOpen(true), 700);
       return () => clearTimeout(timer);
     }
-  }, [showEveryVisit]);
+  }, [showEveryVisit, isAuthPage]);
+
+  if (isAuthPage) return null;
 
   const handleClose = () => {
     setIsOpen(false);
@@ -50,7 +60,7 @@ export default function PopUp({
     localStorage.setItem('hasSeenLaunchPopup', 'true');
     setHasInteracted(true);
     setIsOpen(false);
-    
+
     window.open('https://albiononline.com/newsletter', '_blank');
     setEmail("");
   };
@@ -80,14 +90,14 @@ export default function PopUp({
                        overflow-hidden rounded-3xl shadow-2xl h-[80%] max-h-[350px] my-auto "
           >
             <div className="relative flex flex-col overflow-hidden rounded-3xl lg:flex-row lg:items-start ">
-              
+
               {/* Left Side - Lottie Animation */}
               <div className="relative flex w-full items-center justify-center bg-white p-2 md:p-8 lg:w-5/12 h-full ">
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
                   style={{ backgroundImage: `url(${backgroundImage})` }}
                 />
-                
+
                 <motion.div
                   initial={{ scale: 0.85, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -95,10 +105,10 @@ export default function PopUp({
                   className="relative z-10"
                 >
                   <div className="mx-auto w-80 h-85 overflow-hidden">
-                    <Lottie 
-                      animationData={underDev} 
-                      loop 
-                      autoplay 
+                    <Lottie
+                      animationData={underDev}
+                      loop
+                      autoplay
                     />
                   </div>
                 </motion.div>

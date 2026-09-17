@@ -51,7 +51,7 @@ export default function AboutOurValues() {
             Our Values
           </h2>
           <p className="text-lg text-muted-foreground">
-            The principles that guide everything we do at Albion Game Guild Management Platform
+            The principles that guide everything we do at Albion Game - The All-in-One Gaming Platform
           </p>
         </div>
 

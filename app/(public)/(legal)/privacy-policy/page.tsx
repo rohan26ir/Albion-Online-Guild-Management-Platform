@@ -1,8 +1,12 @@
-// app/privacy-policy/page.tsx
-
+import type { Metadata } from "next";
 import PageCover from "@/components/pagesComp/PageCover";
 import coverImage from '@/public/assets/background/place.webp';
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Learn how Albion Game collects, handles, and protects your personal information.",
+};
 
 export default function PrivacyPolicyPage() {
   return (
@@ -24,7 +28,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-3xl font-bold mb-4">1. Introduction</h2>
               <p>
-                Welcome to the Albion Online Guild Management Platform. We value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+                Welcome to Albion Game - The All-in-One Gaming Platform. We value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
               </p>
               <p className="mt-3">
                 By using our platform, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our platform.

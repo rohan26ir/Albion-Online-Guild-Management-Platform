@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
+export const metadata: Metadata = {
+  title: "Guild Statistics",
+  description: "View guild PvP/PvE fame, kill/death ratios, and season point rankings.",
+};
 
 export default function page() {
   return (

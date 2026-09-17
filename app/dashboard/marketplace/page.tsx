@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Marketplace',
+  description: 'Track Albion Online marketplace prices, guild buy/sell trade offers, and economic arbitrage.',
+};
+
 export default function DashboardMarketplacePage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

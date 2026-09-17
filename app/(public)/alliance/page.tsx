@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Alliances",
+  description: "Explore Albion Online guild alliances, cooperative pacts, territory control, and warfare coalitions.",
+};
 
 export default function AlliancePage() {
   return (

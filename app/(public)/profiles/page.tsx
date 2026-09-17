@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Player Profiles',
+  description: 'Search and view Albion Online player profiles, guild roles, kill fame, and character achievements.',
+};
+
 export default function ProfilesPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

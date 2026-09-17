@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Albion News",
+  description: "Latest Albion Online patch notes, developer updates, guild announcements, and community news.",
+};
 
 export default function page() {
   return (

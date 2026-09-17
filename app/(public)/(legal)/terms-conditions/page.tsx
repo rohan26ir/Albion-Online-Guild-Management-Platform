@@ -1,8 +1,12 @@
-// app/terms-and-conditions/page.tsx
-
+import type { Metadata } from "next";
 import PageCover from "@/components/pagesComp/PageCover";
 import coverImage from '@/public/assets/background/place.webp';
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description: "Read the rules, terms of service, and user agreements for Albion Game platform.",
+};
 
 export default function TermsAndConditionsPage() {
   return (
@@ -23,7 +27,7 @@ export default function TermsAndConditionsPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-4">1. Introduction</h2>
             <p>
-              Welcome to the Albion Online Guild Management Platform. These Terms & Conditions govern your use of our platform, including all features, tools, and services provided. By accessing or using our platform, you agree to be bound by these terms.
+              Welcome to Albion Game - The All-in-One Gaming Platform. These Terms & Conditions govern your use of our platform, including all features, tools, and services provided. By accessing or using our platform, you agree to be bound by these terms.
             </p>
             <p className="mt-3">
               If you do not agree with any part of these terms, you must not use our platform. Please read these terms carefully before using our services.

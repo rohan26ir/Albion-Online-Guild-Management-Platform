@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Settings',
+  description: 'Manage guild platform preferences, member permissions, alert channels, and security administration.',
+};
+
 export default function DashboardSettingsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
+export const metadata: Metadata = {
+  title: "Event Attendance",
+  description: "Track guild member event attendance, raid participation, and active rosters.",
+};
 
 export default function page() {
   return (

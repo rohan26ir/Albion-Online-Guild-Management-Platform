@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
+export const metadata: Metadata = {
+  title: "Guild Announcements",
+  description: "Official guild announcements, patch alerts, and discord broadcasts.",
+};
 
 export default function page() {
   return (

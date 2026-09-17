@@ -212,10 +212,10 @@ export default function Navbar() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold uppercase tracking-widest">
-                      Albion
+                      Albion Game
                     </span>
                     <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">
-                      Guild Platform
+                      The All-in-One Gaming Platform
                     </span>
                   </div>
                 </SheetTitle>

@@ -2,13 +2,13 @@ import type { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Albion Game',
+    name: 'Albion Game - The All-in-One Gaming Platform',
     short_name: 'Albion Game',
-    description: 'Albion Game is a web application that provides information about the Albion Online game.',
+    description: 'The All-in-One Gaming Platform for Albion Online players. Marketplace, calculators, builds, guild tools, maps, and more.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#fff',
-    theme_color: '#fff',
+    background_color: '#000000',
+    theme_color: '#000000',
     icons: [
       {
         src: '/favicon.ico',

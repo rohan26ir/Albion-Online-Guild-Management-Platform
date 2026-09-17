@@ -43,11 +43,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Albion Game - Guild Management Platform",
-    template: "%s | Albion Guild Platform",
+    default: "Albion Game",
+    template: "Albion Game - %s",
   },
-  description: "Comprehensive guild management platform for Albion Online players. Manage members, track events, share builds, and more.",
-  keywords: ["Albion Online", "Albion Game", "Guild Management", "Gaming", "MMORPG", "Guild Tools"],
+  description: "The All-in-One Gaming Platform for Albion Online players. Marketplace prices, crafting calculators, PvP/PvE builds, guild management, interactive maps, and community tools.",
+  keywords: ["Albion Online", "Albion Game", "The All-in-One Gaming Platform", "Gaming Platform", "Marketplace", "Calculators", "Builds", "Guild Management", "MMORPG", "Guild Tools"],
   authors: [{ name: "M.I. Rohan", url: "https://meetrohan.netlify.app/" }],
   creator: "Mahedul Islam Rohan",
   publisher: "Techtwen LLC",
@@ -56,16 +56,16 @@ export const metadata: Metadata = {
     google: 'T6d9N8VnKTSWRrNwabEeMxtTMlp383yGz9V8MB7iH1E',
   },
   openGraph: {
-    title: "Albion Guild Platform",
-    description: "Comprehensive guild management platform for Albion Online players",
+    title: "Albion Game - The All-in-One Gaming Platform",
+    description: "The All-in-One Gaming Platform for Albion Online players. Marketplace prices, crafting calculators, PvP/PvE builds, guild management, interactive maps, and community tools.",
     url: "https://albion-guild-platform.com",
-    siteName: "Albion Guild Platform",
+    siteName: "Albion Game - The All-in-One Gaming Platform",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Albion Guild Platform",
+        alt: "Albion Game - The All-in-One Gaming Platform",
       },
     ],
     locale: "en_US",
@@ -73,10 +73,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Albion Guild Platform",
-    description: "Comprehensive guild management platform for Albion Online players",
+    title: "Albion Game - The All-in-One Gaming Platform",
+    description: "The All-in-One Gaming Platform for Albion Online players. Marketplace prices, crafting calculators, PvP/PvE builds, guild management, interactive maps, and community tools.",
     images: ["/twitter-image.png"],
-    creator: "@albionguild",
+    creator: "@albiongame",
   },
   robots: {
     index: true,

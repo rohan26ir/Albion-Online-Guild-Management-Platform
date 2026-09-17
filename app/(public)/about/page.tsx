@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import AboutOurAchievements from "@/components/pagesComp/AboutOurAchievements";
 import AboutOurStory from "@/components/pagesComp/AboutOurStory";
 import AboutOurValues from "@/components/pagesComp/AboutOurValues";
 import PageCover from "@/components/pagesComp/PageCover";
-// import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about the team and mission behind Albion Game, the all-in-one platform for Albion Online players.",
+};
 
 export default function page() {
   return (

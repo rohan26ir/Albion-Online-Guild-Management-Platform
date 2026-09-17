@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
 
+export const metadata: Metadata = {
+  title: "Guild Overview",
+  description: "Albion Online guild operations, territory ownership, hideout status, and guild roster.",
+};
 
 export default function page() {
   return (

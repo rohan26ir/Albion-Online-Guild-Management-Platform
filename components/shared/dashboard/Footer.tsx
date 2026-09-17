@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const websiteName = "Albion Guild Platform";
+  const websiteName = "Albion Game - The All-in-One Gaming Platform";
   const companyName: string = "Techtwen LLC.";
   const companyUrl = "https://techtwen.com";
   

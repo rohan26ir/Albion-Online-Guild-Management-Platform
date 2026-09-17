@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Marketplace & Trading",
+  description: "Live Albion Online item prices, city market comparisons, and trader listings.",
+};
 
 export default function MarketplacePage() {
   return (

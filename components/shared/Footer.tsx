@@ -76,13 +76,13 @@ export default function Footer() {
                   Albion Game
                 </h3>
                 <p className="text-md text-muted-foreground">
-                  Guild Management Platform
+                  The All-in-One Gaming Platform
                 </p>
               </div>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Empowering Albion Online guilds with advanced management tools,
-              community features, and real-time analytics.
+              The all-in-one gaming platform for Albion Online players. Marketplace prices,
+              calculators, builds, guild management, and interactive tools.
             </p>
             <div className="flex gap-2">
               {socials.map((social) => (

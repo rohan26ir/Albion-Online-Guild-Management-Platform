@@ -3,12 +3,12 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { 
-  IconBrandGoogle, 
+import {
+  IconBrandGoogle,
   IconBrandFacebook,
-  IconEye, 
-  IconEyeOff, 
-  IconLock, 
+  IconEye,
+  IconEyeOff,
+  IconLock,
   IconMail,
   IconArrowRight,
   IconAlertCircle
@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import bgImage from "@/public/assets/background/ao-login.webp";
+import albionLogo from "@/public/assets/logo/albion_online_logo.svg";
 import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -30,8 +31,8 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(
-    errorParam === "auth_callback_failed" 
-      ? "Authentication callback failed. Please try again." 
+    errorParam === "auth_callback_failed"
+      ? "Authentication callback failed. Please try again."
       : ""
   );
 
@@ -74,7 +75,7 @@ function LoginForm() {
 
     try {
       const callbackUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`;
-      
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -98,9 +99,9 @@ function LoginForm() {
       {/* Background Image */}
       <div className="fixed inset-0 -z-10 brightness-75">
         <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/70" />
-        <Image 
-          src={bgImage} 
-          alt="Albion Online Background" 
+        <Image
+          src={bgImage}
+          alt="Albion Online Background"
           fill
           className="object-cover"
           priority
@@ -112,22 +113,26 @@ function LoginForm() {
         <div className="w-full max-w-md">
           {/* Glassmorphism Card */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
-            
+
             {/* Decorative gradient blob */}
             <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
             <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
 
-            <div className="relative p-6 sm:p-8">
+            <div className="relative p-6 sm:p-8 border-4 border-white/30">
               {/* Logo / Title Section */}
               <div className="mb-6 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20 border border-primary/30 shadow-inner">
-                  <IconLock size={32} className="text-primary" />
+                <div className="mx-auto mb-4 flex w-auto items-center justify-center">
+                  <Image
+                    src={albionLogo}
+                    alt="Albion Online"
+                    width={192}
+                    height={192}
+                    className="object-cover"
+                    priority
+                  />
                 </div>
-                <h1 className="text-2xl font-bold text-white sm:text-3xl">
-                  Welcome Back
-                </h1>
                 <p className="mt-2 text-sm text-white/60">
-                  Sign in to continue to Albion Guild Platform
+                  Sign in to continue to Albion Game - The All-in-One Gaming Platform
                 </p>
               </div>
 
@@ -140,7 +145,7 @@ function LoginForm() {
               )}
 
               {/* Quick Social OAuth Buttons */}
-              <div className="space-y-2 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-6">
                 <Button
                   type="button"
                   variant="outline"
@@ -151,9 +156,9 @@ function LoginForm() {
                   {oauthLoading === "google" ? (
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                   ) : (
-                    <IconBrandGoogle size={18} className="text-red-400" />
+                    <IconBrandGoogle size={18} className="text-red-500" />
                   )}
-                  <span>Sign in with Google</span>
+                  <span>Google</span>
                 </Button>
 
                 <Button
@@ -168,7 +173,7 @@ function LoginForm() {
                   ) : (
                     <IconBrandFacebook size={18} className="text-blue-400" />
                   )}
-                  <span>Sign in with Facebook</span>
+                  <span>Facebook</span>
                 </Button>
               </div>
 
@@ -241,15 +246,15 @@ function LoginForm() {
                 {/* Remember Me & Forgot Password */}
                 <div className="flex items-center justify-between pt-1">
                   <label className="flex items-center gap-2 text-sm text-white/60 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       defaultChecked
-                      className="rounded border-white/20 bg-white/10 text-primary focus:ring-primary" 
+                      className="rounded border-white/20 bg-white/10 text-primary focus:ring-primary"
                     />
                     <span className="text-xs">Remember me</span>
                   </label>
-                  <Link 
-                    href="/forgot-password" 
+                  <Link
+                    href="/forgot-password"
                     className="text-xs text-primary hover:text-primary/80 transition-colors"
                   >
                     Forgot Password?
@@ -257,8 +262,8 @@ function LoginForm() {
                 </div>
 
                 {/* Submit Button */}
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading || oauthLoading !== null}
                   className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 mt-2 transition-all shadow-lg shadow-primary/20"
                 >

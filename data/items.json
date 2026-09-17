@@ -1,0 +1,293 @@
+[
+  {
+    "id": "item-bloodletter-t8",
+    "name": "Bloodletter",
+    "identifier": "T8_MAIN_DAGGER",
+    "tier": "T8",
+    "enchantment": 1,
+    "quality": "Excellent",
+    "category": "Weapon",
+    "subcategory": "Dagger",
+    "itemPower": 1420,
+    "description": "A lethal one-handed assassination dagger with Execute, dealing colossal damage against foes below 40% health.",
+    "icon": "https://render.albiononline.com/v1/item/T8_MAIN_DAGGER@1.png",
+    "twoHanded": false,
+    "stats": {
+      "attackDamage": 114,
+      "attackSpeed": 1.25,
+      "cooldownReduction": 0,
+      "movementSpeed": 0,
+      "maxEnergy": 180
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 70,
+      "tierRequired": "T8"
+    },
+    "marketData": {
+      "estimatedPrice": 685000,
+      "lowestPrice": 650000,
+      "highestPrice": 720000,
+      "dailyVolume": 42
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-mistcaller-t8",
+    "name": "Mistcaller",
+    "identifier": "T8_OFF_HORN_KEEPER",
+    "tier": "T8",
+    "enchantment": 0,
+    "quality": "Masterpiece",
+    "category": "Off-Hand",
+    "subcategory": "Horn",
+    "itemPower": 1350,
+    "description": "An ancient keeper horn granting immense cooldown reduction for rapid spell rotation and mobility.",
+    "icon": "https://render.albiononline.com/v1/item/T8_OFF_HORN_KEEPER.png",
+    "twoHanded": false,
+    "stats": {
+      "cooldownReduction": 18.5,
+      "maxEnergy": 95,
+      "energyRegen": 2.2
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 50,
+      "tierRequired": "T8"
+    },
+    "marketData": {
+      "estimatedPrice": 320000,
+      "lowestPrice": 295000,
+      "highestPrice": 345000,
+      "dailyVolume": 28
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-mage-cowl-t8",
+    "name": "Mage Cowl",
+    "identifier": "T8_HEAD_CLOTH_SET1",
+    "tier": "T8",
+    "enchantment": 1,
+    "quality": "Outstanding",
+    "category": "Armor",
+    "subcategory": "Cloth Cowl",
+    "itemPower": 1400,
+    "description": "Provides Firebreath to ignite opponents for heavy continuous damage or Force Field for disengagement.",
+    "icon": "https://render.albiononline.com/v1/item/T8_HEAD_CLOTH_SET1@1.png",
+    "stats": {
+      "magicResist": 78,
+      "armor": 42,
+      "maxHealth": 160,
+      "maxEnergy": 140
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 60
+    },
+    "marketData": {
+      "estimatedPrice": 190000,
+      "lowestPrice": 175000,
+      "highestPrice": 210000,
+      "dailyVolume": 65
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-assassin-jacket-t8",
+    "name": "Assassin Jacket",
+    "identifier": "T8_ARMOR_LEATHER_SET3",
+    "tier": "T8",
+    "enchantment": 1,
+    "quality": "Outstanding",
+    "category": "Armor",
+    "subcategory": "Leather Jacket",
+    "itemPower": 1410,
+    "description": "Features Ambush for stealth, ambush damage amplification, and evading enemy hunters.",
+    "icon": "https://render.albiononline.com/v1/item/T8_ARMOR_LEATHER_SET3@1.png",
+    "stats": {
+      "armor": 110,
+      "magicResist": 110,
+      "maxHealth": 480,
+      "maxEnergy": 110,
+      "attackDamage": 25
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 80
+    },
+    "marketData": {
+      "estimatedPrice": 420000,
+      "lowestPrice": 395000,
+      "highestPrice": 450000,
+      "dailyVolume": 80
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-soldier-boots-t8",
+    "name": "Soldier Boots",
+    "identifier": "T8_SHOES_PLATE_SET1",
+    "tier": "T8",
+    "enchantment": 0,
+    "quality": "Good",
+    "category": "Armor",
+    "subcategory": "Plate Boots",
+    "itemPower": 1300,
+    "description": "Features Wanderlust for extreme progressive movement speed across long open-world chases.",
+    "icon": "https://render.albiononline.com/v1/item/T8_SHOES_PLATE_SET1.png",
+    "stats": {
+      "armor": 72,
+      "magicResist": 45,
+      "maxHealth": 210,
+      "movementSpeed": 10
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 40
+    },
+    "marketData": {
+      "estimatedPrice": 160000,
+      "lowestPrice": 148000,
+      "highestPrice": 175000,
+      "dailyVolume": 110
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-thetford-cape-t8",
+    "name": "Thetford Cape",
+    "identifier": "T8_CAPEITEM_FW_THETFORD",
+    "tier": "T8",
+    "enchantment": 0,
+    "quality": "Outstanding",
+    "category": "Accessory",
+    "subcategory": "Faction Cape",
+    "itemPower": 1300,
+    "description": "Unleashes a devastating chain lightning strike upon auto-attacking enemies, hitting up to 4 targets.",
+    "icon": "https://render.albiononline.com/v1/item/T8_CAPEITEM_FW_THETFORD.png",
+    "stats": {
+      "magicDamage": 140,
+      "maxEnergy": 80
+    },
+    "marketData": {
+      "estimatedPrice": 380000,
+      "lowestPrice": 350000,
+      "highestPrice": 410000,
+      "dailyVolume": 50
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-carving-sword-t8",
+    "name": "Carving Sword",
+    "identifier": "T8_2H_CLEAVER_HELL",
+    "tier": "T8",
+    "enchantment": 2,
+    "quality": "Masterpiece",
+    "category": "Weapon",
+    "subcategory": "Sword",
+    "itemPower": 1540,
+    "description": "Two-handed artifact sword with Fearless Strike, dashing forward and shredding enemy armor by up to 50%.",
+    "icon": "https://render.albiononline.com/v1/item/T8_2H_CLEAVER_HELL@2.png",
+    "twoHanded": true,
+    "stats": {
+      "attackDamage": 148,
+      "attackSpeed": 1.1,
+      "maxHealth": 150,
+      "maxEnergy": 210
+    },
+    "requirements": {
+      "reaverLevel": 8,
+      "masteryLevel": 100
+    },
+    "marketData": {
+      "estimatedPrice": 1250000,
+      "lowestPrice": 1190000,
+      "highestPrice": 1350000,
+      "dailyVolume": 35
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-swiftclaw-t5",
+    "name": "Swiftclaw",
+    "identifier": "T5_MOUNT_COUGAR_KEEPER",
+    "tier": "T5",
+    "enchantment": 0,
+    "quality": "Normal",
+    "category": "Mount",
+    "subcategory": "Fast Mount",
+    "itemPower": 800,
+    "description": "High-speed predator mount suited for agile navigation, scouting, and open-world hunting.",
+    "icon": "https://render.albiononline.com/v1/item/T5_MOUNT_COUGAR_KEEPER.png",
+    "stats": {
+      "movementSpeed": 80,
+      "maxHealth": 900
+    },
+    "marketData": {
+      "estimatedPrice": 145000,
+      "lowestPrice": 139000,
+      "highestPrice": 155000,
+      "dailyVolume": 220
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-beef-stew-t7",
+    "name": "Deadwater Eel Stew",
+    "identifier": "T7_MEAL_ROAST_FISH",
+    "tier": "T7",
+    "enchantment": 1,
+    "quality": "Normal",
+    "category": "Consumable",
+    "subcategory": "Food",
+    "itemPower": 1100,
+    "description": "Gourmet meal enhancing physical and magical damage output while reducing cooldown times.",
+    "icon": "https://render.albiononline.com/v1/item/T7_MEAL_ROAST_FISH@1.png",
+    "stats": {
+      "attackDamage": 13.5,
+      "cooldownReduction": 4.8
+    },
+    "marketData": {
+      "estimatedPrice": 42000,
+      "lowestPrice": 38000,
+      "highestPrice": 46000,
+      "dailyVolume": 400
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+    "id": "item-healing-potion-t7",
+    "name": "Major Healing Potion",
+    "identifier": "T7_POTION_HEAL",
+    "tier": "T7",
+    "enchantment": 1,
+    "quality": "Normal",
+    "category": "Consumable",
+    "subcategory": "Potion",
+    "itemPower": 1050,
+    "description": "Restores a significant portion of maximum health over 9 seconds in the heat of combat.",
+    "icon": "https://render.albiononline.com/v1/item/T7_POTION_HEAL@1.png",
+    "stats": {
+      "maxHealth": 350
+    },
+    "marketData": {
+      "estimatedPrice": 18000,
+      "lowestPrice": 16500,
+      "highestPrice": 20500,
+      "dailyVolume": 850
+    },
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T09:00:00.000Z"
+  }
+]

@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Guild Management",
+  description: "Modern guild management software for Albion Online: roster automation, Discord bots, and treasury splits.",
+};
 
 export default function GuildManagementPage() {
   return (

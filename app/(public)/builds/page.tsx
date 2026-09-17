@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import UnderDevelopment from "@/components/shared/UnderDevelopment";
+
+export const metadata: Metadata = {
+  title: "Builds & Loadouts",
+  description: "Browse top rated Albion Online PvP, PvE, Corrupted Dungeon, and ZvZ builds and weapon loadouts.",
+};
 
 export default function BuildsPage() {
   return (

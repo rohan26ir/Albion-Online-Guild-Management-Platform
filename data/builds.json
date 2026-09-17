@@ -1,0 +1,597 @@
+[
+  {
+    "id": "build-1789617177427-9ou",
+    "title": "Bloodletter Open World Gank & Escape (Copy)",
+    "author": "Commander Vane",
+    "role": "Ganker",
+    "location": "Open World",
+    "zone": "Black Zone (Outlands)",
+    "groupSize": "Solo (1)",
+    "activity": "Ganking",
+    "description": "The premier open-world roaming and solo ganking setup. Combines unmatched mobility with Execute burst.",
+    "comboGuide": "1. Stalk target with Wanderlust and Mount dismount.\n2. Engage with Dash (W), pop Assassin Ambush for damage stack.\n3. Land Shadow Edge / Q bleed, followed by Execute (E) when target drops below 40% health.",
+    "pros": [
+      "Near impossible to catch or kill when played well",
+      "Huge kill pressure below 40% health threshold",
+      "Dual dash abilities provide supreme horizontal movement"
+    ],
+    "cons": [
+      "Weaker sustained DPS against tanks and high-sustain bruisers",
+      "Requires precise spacing and cooldown management"
+    ],
+    "equipment": {
+      "bag": {
+        "item": {
+          "id": "item-bag-t8",
+          "name": "Adept Bag",
+          "identifier": "T8_BAG",
+          "tier": "T8",
+          "enchantment": 0,
+          "quality": "Outstanding",
+          "category": "Accessory",
+          "subcategory": "Bag",
+          "itemPower": 1300,
+          "description": "Heavy travel bag.",
+          "icon": "https://render.albiononline.com/v1/item/T8_BAG.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 120000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "passive": "Carry Weight"
+      },
+      "head": {
+        "item": {
+          "id": "item-mage-cowl-t8",
+          "name": "Mage Cowl",
+          "identifier": "T8_HEAD_CLOTH_SET1",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Outstanding",
+          "category": "Armor",
+          "subcategory": "Cloth Cowl",
+          "itemPower": 1400,
+          "description": "Provides Firebreath to ignite opponents for heavy continuous damage.",
+          "icon": "https://render.albiononline.com/v1/item/T8_HEAD_CLOTH_SET1@1.png",
+          "stats": {
+            "magicResist": 78,
+            "armor": 42,
+            "maxHealth": 160,
+            "maxEnergy": 140
+          },
+          "marketData": {
+            "estimatedPrice": 190000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellD": "Firebreath",
+        "passive": "Aggressive Caster"
+      },
+      "cape": {
+        "item": {
+          "id": "item-thetford-cape-t8",
+          "name": "Thetford Cape",
+          "identifier": "T8_CAPEITEM_FW_THETFORD",
+          "tier": "T4",
+          "enchantment": 2,
+          "quality": "Outstanding",
+          "category": "Accessory",
+          "subcategory": "Faction Cape",
+          "itemPower": 1100,
+          "description": "Unleashes chain lightning upon auto-attacking enemies.",
+          "icon": "https://render.albiononline.com/v1/item/T4_CAPEITEM_FW_THETFORD@2.png",
+          "stats": {
+            "magicDamage": 140,
+            "maxEnergy": 80
+          },
+          "marketData": {
+            "estimatedPrice": 180000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "trigger": "Chain Lightning"
+      },
+      "mainHand": {
+        "item": {
+          "id": "item-bloodletter-t8",
+          "name": "Bloodletter",
+          "identifier": "T8_MAIN_DAGGER",
+          "tier": "T6",
+          "enchantment": 1,
+          "quality": "Excellent",
+          "category": "Weapon",
+          "subcategory": "Dagger",
+          "itemPower": 1280,
+          "description": "A lethal one-handed assassination dagger with Execute.",
+          "icon": "https://render.albiononline.com/v1/item/T6_MAIN_DAGGER@1.png",
+          "twoHanded": false,
+          "stats": {
+            "attackDamage": 114,
+            "attackSpeed": 1.25,
+            "maxEnergy": 180
+          },
+          "marketData": {
+            "estimatedPrice": 385000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellQ": "Deadly Swipe",
+        "spellW": "Shadow Edge",
+        "spellE": "Execute",
+        "passive": "Deep Cuts"
+      },
+      "armor": {
+        "item": {
+          "id": "item-assassin-jacket-t8",
+          "name": "Assassin Jacket",
+          "identifier": "T8_ARMOR_LEATHER_SET3",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Outstanding",
+          "category": "Armor",
+          "subcategory": "Leather Jacket",
+          "itemPower": 1410,
+          "description": "Features Ambush for stealth, ambush damage amplification.",
+          "icon": "https://render.albiononline.com/v1/item/T8_ARMOR_LEATHER_SET3@1.png",
+          "stats": {
+            "armor": 110,
+            "magicResist": 110,
+            "maxHealth": 480,
+            "maxEnergy": 110,
+            "attackDamage": 25
+          },
+          "marketData": {
+            "estimatedPrice": 420000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellR": "Ambush",
+        "passive": "Quick Thinker"
+      },
+      "offHand": {
+        "item": {
+          "id": "item-mistcaller-t8",
+          "name": "Mistcaller",
+          "identifier": "T8_OFF_HORN_KEEPER",
+          "tier": "T8",
+          "enchantment": 2,
+          "quality": "Masterpiece",
+          "category": "Off-Hand",
+          "subcategory": "Horn",
+          "itemPower": 1450,
+          "description": "An ancient keeper horn granting immense cooldown reduction.",
+          "icon": "https://render.albiononline.com/v1/item/T8_OFF_HORN_KEEPER@2.png",
+          "twoHanded": false,
+          "stats": {
+            "cooldownReduction": 18.5,
+            "maxEnergy": 95,
+            "energyRegen": 2.2
+          },
+          "marketData": {
+            "estimatedPrice": 420000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "passive": "Cooldown Reduction"
+      },
+      "potion": {
+        "item": {
+          "id": "item-healing-potion-t7",
+          "name": "Major Poison Potion",
+          "identifier": "T3_POTION_REVIVE",
+          "tier": "T3",
+          "enchantment": 0,
+          "quality": "Normal",
+          "category": "Consumable",
+          "subcategory": "Potion",
+          "itemPower": 600,
+          "description": "Poisons targets, reducing damage resistance and dismounting swiftly.",
+          "icon": "https://render.albiononline.com/v1/item/T4_POTION_COOLDOWN.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 15000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "quantity": 10
+      },
+      "shoes": {
+        "item": {
+          "id": "item-soldier-boots-t8",
+          "name": "Soldier Boots",
+          "identifier": "T8_SHOES_PLATE_SET1",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Good",
+          "category": "Armor",
+          "subcategory": "Plate Boots",
+          "itemPower": 1350,
+          "description": "Features Wanderlust for extreme progressive movement speed.",
+          "icon": "https://render.albiononline.com/v1/item/T8_SHOES_PLATE_SET1@1.png",
+          "stats": {
+            "armor": 72,
+            "magicResist": 45,
+            "maxHealth": 210,
+            "movementSpeed": 10
+          },
+          "marketData": {
+            "estimatedPrice": 210000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellF": "Wanderlust",
+        "passive": "Toughness"
+      },
+      "food": {
+        "item": {
+          "id": "item-beef-stew-t7",
+          "name": "Pork Omelette",
+          "identifier": "T7_MEAL_ROAST_FISH",
+          "tier": "T7",
+          "enchantment": 3,
+          "quality": "Normal",
+          "category": "Consumable",
+          "subcategory": "Food",
+          "itemPower": 1150,
+          "description": "Improves cooldown rate and cast speed significantly.",
+          "icon": "https://render.albiononline.com/v1/item/T7_MEAL_OMELETTE@3.png",
+          "stats": {
+            "cooldownReduction": 12
+          },
+          "marketData": {
+            "estimatedPrice": 65000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "quantity": 6
+      },
+      "mount": {
+        "item": {
+          "id": "item-swiftclaw-t5",
+          "name": "Armored Horse",
+          "identifier": "T8_MOUNT_HORSE",
+          "tier": "T8",
+          "enchantment": 0,
+          "quality": "Normal",
+          "category": "Mount",
+          "subcategory": "Armored Mount",
+          "itemPower": 1200,
+          "description": "Armored warhorse for resilient scouting and safe dismounting.",
+          "icon": "https://render.albiononline.com/v1/item/T8_MOUNT_ARMORED_HORSE.png",
+          "stats": {
+            "movementSpeed": 75,
+            "maxHealth": 1400
+          },
+          "marketData": {
+            "estimatedPrice": 380000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      }
+    },
+    "inventoryItems": [
+      {
+        "id": "inv-1",
+        "name": "Tome of Insight",
+        "tier": "T8",
+        "category": "Consumable",
+        "subcategory": "Tome",
+        "icon": "https://render.albiononline.com/v1/item/T8_ITEM_SKILLBOOK_STANDARD.png",
+        "itemPower": 0,
+        "enchantment": 0,
+        "quality": "Normal",
+        "description": "Fame book",
+        "identifier": "T8_TOME",
+        "stats": {},
+        "marketData": {
+          "estimatedPrice": 200000
+        },
+        "createdAt": "",
+        "updatedAt": ""
+      },
+      {
+        "id": "inv-2",
+        "name": "Swiftclaw",
+        "tier": "T5",
+        "category": "Mount",
+        "subcategory": "Mount",
+        "icon": "https://render.albiononline.com/v1/item/T5_MOUNT_COUGAR_KEEPER.png",
+        "itemPower": 800,
+        "enchantment": 0,
+        "quality": "Normal",
+        "description": "Spare mount",
+        "identifier": "T5_MOUNT",
+        "stats": {},
+        "marketData": {
+          "estimatedPrice": 140000
+        },
+        "createdAt": "",
+        "updatedAt": ""
+      },
+      {
+        "id": "inv-3",
+        "name": "Major Gigantify Potion",
+        "tier": "T7",
+        "category": "Consumable",
+        "subcategory": "Potion",
+        "icon": "https://render.albiononline.com/v1/item/T7_POTION_SLOWDOWN.png",
+        "itemPower": 1000,
+        "enchantment": 0,
+        "quality": "Normal",
+        "description": "Gigantify potion",
+        "identifier": "T7_GIG",
+        "stats": {},
+        "marketData": {
+          "estimatedPrice": 25000
+        },
+        "createdAt": "",
+        "updatedAt": ""
+      }
+    ],
+    "totalItemPower": 1395,
+    "estimatedCost": 2240000,
+    "difficulty": "Intermediate",
+    "isFeatured": true,
+    "isPublished": true,
+    "createdAt": "2026-09-17T03:52:57.427Z",
+    "updatedAt": "2026-09-17T04:03:41.693Z",
+    "likes": 120
+  },
+  {
+    "id": "build-carving-sword-zvz",
+    "title": "Carving Sword Clump Pierce",
+    "author": "Ironclad Shotcaller",
+    "role": "ZvZ Bruiser",
+    "location": "Open World",
+    "zone": "Black Zone (Outlands)",
+    "groupSize": "ZvZ / Large Scale (10-20+)",
+    "activity": "ZvZ",
+    "description": "Indispensable frontline bruiser and pierce setup for large scale castle sieges and ZvZ clap engagements.",
+    "comboGuide": "1. Stack 3 Heroic Charges via Heroic Strike (Q).\n2. Coordinate with shotcaller on clump callout.\n3. Cast Fearless Strike (E) through the frontline clump to instantly apply -50% armor shred.\n4. Follow up with Royal Hood or Hellion Jacket for massive sustain.",
+    "pros": [
+      "Essential armor debuff enables team-wiping claps",
+      "Solid personal survivability and immunity frames during E",
+      "Extremely high demand in all competitive ZvZ guilds"
+    ],
+    "cons": [
+      "Expensive artifact weapons (especially 8.3/8.4)",
+      "Punished heavily if misplaced without defensive support"
+    ],
+    "equipment": {
+      "bag": {
+        "item": {
+          "id": "item-bag-t8",
+          "name": "Adept Bag",
+          "identifier": "T8_BAG",
+          "tier": "T8",
+          "enchantment": 0,
+          "quality": "Outstanding",
+          "category": "Accessory",
+          "subcategory": "Bag",
+          "itemPower": 1300,
+          "description": "Adventurer bag.",
+          "icon": "https://render.albiononline.com/v1/item/T8_BAG.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 120000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      },
+      "head": {
+        "item": {
+          "id": "item-mage-cowl-t8",
+          "name": "Knight Helmet",
+          "identifier": "T8_HEAD_PLATE_SET1",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Outstanding",
+          "category": "Armor",
+          "subcategory": "Plate Helm",
+          "itemPower": 1400,
+          "description": "Displacement immunity shield for frontline push.",
+          "icon": "https://render.albiononline.com/v1/item/T8_HEAD_PLATE_SET1@1.png",
+          "stats": {
+            "armor": 80
+          },
+          "marketData": {
+            "estimatedPrice": 190000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellD": "Cleanse",
+        "passive": "Toughness"
+      },
+      "cape": {
+        "item": {
+          "id": "item-martlock-cape-t8",
+          "name": "Fort Sterling Cape",
+          "identifier": "T8_CAPEITEM_FW_FORTSTERLING",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Outstanding",
+          "category": "Accessory",
+          "subcategory": "Faction Cape",
+          "itemPower": 1350,
+          "description": "Purges CC automatically when stunned.",
+          "icon": "https://render.albiononline.com/v1/item/T8_CAPEITEM_FW_FORTSTERLING@1.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 380000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "trigger": "Dispel CC"
+      },
+      "mainHand": {
+        "item": {
+          "id": "item-carving-sword-t8",
+          "name": "Carving Sword",
+          "identifier": "T8_2H_CLEAVER_HELL",
+          "tier": "T8",
+          "enchantment": 2,
+          "quality": "Masterpiece",
+          "category": "Weapon",
+          "subcategory": "Sword",
+          "itemPower": 1540,
+          "description": "Two-handed artifact sword with Fearless Strike, dashing forward and shredding enemy armor by up to 50%.",
+          "icon": "https://render.albiononline.com/v1/item/T8_2H_CLEAVER_HELL@2.png",
+          "twoHanded": true,
+          "stats": {
+            "attackDamage": 148,
+            "attackSpeed": 1.1,
+            "maxHealth": 150,
+            "maxEnergy": 210
+          },
+          "marketData": {
+            "estimatedPrice": 1250000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellQ": "Heroic Strike",
+        "spellW": "Iron Will",
+        "spellE": "Fearless Strike",
+        "passive": "Heroic Fighting"
+      },
+      "armor": {
+        "item": {
+          "id": "item-hellion-jacket-t8",
+          "name": "Hellion Jacket",
+          "identifier": "T8_ARMOR_LEATHER_HELL",
+          "tier": "T8",
+          "enchantment": 2,
+          "quality": "Outstanding",
+          "category": "Armor",
+          "subcategory": "Leather Jacket",
+          "itemPower": 1500,
+          "description": "Life Leech aura dealing AOE damage and restoring health per enemy in clump.",
+          "icon": "https://render.albiononline.com/v1/item/T8_ARMOR_LEATHER_HELL@2.png",
+          "stats": {
+            "armor": 120,
+            "maxHealth": 550
+          },
+          "marketData": {
+            "estimatedPrice": 850000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellR": "Life Thief",
+        "passive": "Balanced Mind"
+      },
+      "offHand": {
+        "item": null
+      },
+      "potion": {
+        "item": {
+          "id": "item-res-pot",
+          "name": "Resistance Potion",
+          "identifier": "T7_POTION_STONESKIN",
+          "tier": "T7",
+          "enchantment": 1,
+          "quality": "Normal",
+          "category": "Consumable",
+          "subcategory": "Potion",
+          "itemPower": 1050,
+          "description": "Immense defense boost against burst claps.",
+          "icon": "https://render.albiononline.com/v1/item/T7_POTION_STONESKIN@1.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 35000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "quantity": 10
+      },
+      "shoes": {
+        "item": {
+          "id": "item-scholar-sandals-t8",
+          "name": "Scholar Sandals",
+          "identifier": "T8_SHOES_CLOTH_SET1",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Outstanding",
+          "category": "Armor",
+          "subcategory": "Cloth Sandals",
+          "itemPower": 1390,
+          "description": "Focused Run: Unstoppable channel restoring energy while charging forward.",
+          "icon": "https://render.albiononline.com/v1/item/T8_SHOES_CLOTH_SET1@1.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 160000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "spellF": "Focused Run",
+        "passive": "Aggressive Caster"
+      },
+      "food": {
+        "item": {
+          "id": "item-beef-stew-t7",
+          "name": "Beef Stew",
+          "identifier": "T8_MEAL_STEW",
+          "tier": "T8",
+          "enchantment": 1,
+          "quality": "Normal",
+          "category": "Consumable",
+          "subcategory": "Food",
+          "itemPower": 1200,
+          "description": "Raw damage multiplier for large clashes.",
+          "icon": "https://render.albiononline.com/v1/item/T8_MEAL_STEW@1.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 45000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        "quantity": 6
+      },
+      "mount": {
+        "item": {
+          "id": "item-swiftclaw-t5",
+          "name": "Armored Horse",
+          "identifier": "T8_MOUNT_ARMORED_HORSE",
+          "tier": "T8",
+          "enchantment": 0,
+          "quality": "Normal",
+          "category": "Mount",
+          "subcategory": "Armored Mount",
+          "itemPower": 1200,
+          "description": "ZvZ armored horse.",
+          "icon": "https://render.albiononline.com/v1/item/T8_MOUNT_ARMORED_HORSE.png",
+          "stats": {},
+          "marketData": {
+            "estimatedPrice": 380000
+          },
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      }
+    },
+    "totalItemPower": 1475,
+    "estimatedCost": 3520000,
+    "difficulty": "Expert",
+    "isFeatured": true,
+    "isPublished": true,
+    "createdAt": "2026-09-17T09:00:00.000Z",
+    "updatedAt": "2026-09-17T03:57:05.817Z"
+  }
+]

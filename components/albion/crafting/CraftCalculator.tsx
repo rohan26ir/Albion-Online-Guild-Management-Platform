@@ -12,105 +12,68 @@ import {
   IconChevronUp,
   IconChevronDown,
   IconCoins,
-  IconFlame,
-  IconCrown,
-  IconTrendingUp,
-  IconSparkles,
 } from "@tabler/icons-react";
 
-export interface SelectedRefineItem {
+export interface SelectedCraftItem {
   instanceId: string;
   item: AlbionItem;
   count: number;
   usageFee: number;
-  sellPrice: number;
 }
 
-// City bonuses in Albion Online for refining
-const REFINING_CITIES = [
-  { name: "Thetford", bonusResource: "Metal Bars", bonusNote: "+Ore (36.7% RRR)" },
-  { name: "Fort Sterling", bonusResource: "Planks", bonusNote: "+Wood (36.7% RRR)" },
-  { name: "Lymhurst", bonusResource: "Cloth", bonusNote: "+Fiber (36.7% RRR)" },
-  { name: "Martlock", bonusResource: "Leather", bonusNote: "+Hide (36.7% RRR)" },
-  { name: "Bridgewatch", bonusResource: "Stone Blocks", bonusNote: "+Stone (36.7% RRR)" },
-  { name: "Caerleon", bonusResource: "None", bonusNote: "Royal / Island (15.2% RRR)" },
-  { name: "Brecilien", bonusResource: "None", bonusNote: "Mists (15.2% RRR)" },
-];
-
-export default function RefiningCalculatorPage() {
-  const [selectedCity, setSelectedCity] = useState("Fort Sterling");
+export function CraftCalculator() {
+  const [selectedCity, setSelectedCity] = useState("Bridgewatch");
   const [isAddItemOpen, setIsAddItemOpen] = useState(false);
   const [isRecentDropdownOpen, setIsRecentDropdownOpen] = useState(false);
 
-  // Refining modifiers
-  const [useFocus, setUseFocus] = useState(true);
-  const [hasPremium, setHasPremium] = useState(true);
-
-  // Helper to canonicalize ingredient key to merge duplicates
+  // Canonical key helper to ensure identical ingredients across recipes are aggregated together
   const getIngredientCanonicalKey = (ing: CraftingIngredient) => {
     return `${ing.identifier}@${ing.enchantment || 0}`;
   };
 
-  // Preload initial refining item: Cedar Planks (Tier 5)
-  const initialRefineItem =
-    GLOBAL_ALBION_ITEMS.find(
-      (i) => i.category === "Refining" && i.identifier === "T5_PLANKS" && i.enchantment === 0
-    ) ||
-    GLOBAL_ALBION_ITEMS.find((i) => i.category === "Refining") ||
+  // Preload with Expert's Broadsword or Cedar Planks as initial item
+  const initialItem =
+    GLOBAL_ALBION_ITEMS.find((i) => i.identifier === "T5_MAIN_SWORD") ||
     GLOBAL_ALBION_ITEMS[0];
 
-  const [refineItems, setRefineItems] = useState<SelectedRefineItem[]>([
+  const [craftItems, setCraftItems] = useState<SelectedCraftItem[]>([
     {
-      instanceId: "initial-cedar-planks",
-      item: initialRefineItem,
-      count: 100,
-      usageFee: 1000,
-      sellPrice: initialRefineItem.price || 620,
+      instanceId: "initial-broadsword",
+      item: initialItem,
+      count: 10,
+      usageFee: initialItem.defaultUsageFee,
     },
   ]);
 
-  // Track "Have" inputs and "Cost" inputs by canonical ingredient key
+  // Track "Have" inputs and "Cost" inputs by ingredient ID
   const [haveAmounts, setHaveAmounts] = useState<Record<string, number>>({});
   const [unitCosts, setUnitCosts] = useState<Record<string, number>>({
-    [getIngredientCanonicalKey(initialRefineItem.ingredients[0])]:
-      initialRefineItem.ingredients[0].baseCost,
-    [getIngredientCanonicalKey(initialRefineItem.ingredients[1])]:
-      initialRefineItem.ingredients[1].baseCost,
+    [getIngredientCanonicalKey(initialItem.ingredients[0])]:
+      initialItem.ingredients[0].baseCost,
+    [getIngredientCanonicalKey(initialItem.ingredients[1])]:
+      initialItem.ingredients[1].baseCost,
   });
 
-  // Calculate Resource Return Rate (RRR) based on city bonus & focus
-  const activeCityData =
-    REFINING_CITIES.find((c) => c.name === selectedCity) || REFINING_CITIES[0];
+  // Cities list matching Albion
+  const cities = [
+    "Bridgewatch",
+    "Fort Sterling",
+    "Lymhurst",
+    "Martlock",
+    "Thetford",
+    "Caerleon",
+    "Brecilien",
+  ];
 
-  // Check if active items match city bonus
-  const isCityBonusActive = (item: AlbionItem) => {
-    if (activeCityData.bonusResource === "Metal Bars" && item.subcategory === "Metal Bars") return true;
-    if (activeCityData.bonusResource === "Planks" && item.subcategory === "Planks") return true;
-    if (activeCityData.bonusResource === "Cloth" && item.subcategory === "Cloth") return true;
-    if (activeCityData.bonusResource === "Leather" && item.subcategory === "Leather") return true;
-    if (activeCityData.bonusResource === "Stone Blocks" && item.subcategory === "Stone Blocks") return true;
-    return false;
-  };
-
-  // Return rate calculation per item (standard Albion formulas)
-  const getItemRRR = (item: AlbionItem) => {
-    const hasBonus = isCityBonusActive(item);
-    if (hasBonus) {
-      return useFocus ? 0.539 : 0.367; // 53.9% with focus, 36.7% without
-    }
-    return useFocus ? 0.435 : 0.152; // 43.5% with focus, 15.2% without
-  };
-
-  // Add item from modal
+  // Handle adding an item from the global marketplace modal
   const handleAddItem = (item: AlbionItem) => {
-    const newItem: SelectedRefineItem = {
+    const newItem: SelectedCraftItem = {
       instanceId: `${item.id}-${Date.now()}`,
       item,
-      count: 100,
+      count: item.category === "Refining" ? 100 : 10,
       usageFee: item.defaultUsageFee,
-      sellPrice: item.price || 620,
     };
-    setRefineItems((prev) => [...prev, newItem]);
+    setCraftItems((prev) => [...prev, newItem]);
 
     // Pre-populate unit costs from ingredient baseCost if not already set
     item.ingredients.forEach((ing) => {
@@ -124,14 +87,14 @@ export default function RefiningCalculatorPage() {
     });
   };
 
-  // Remove item
+  // Remove item from crafting list
   const handleRemoveItem = (instanceId: string) => {
-    setRefineItems((prev) => prev.filter((item) => item.instanceId !== instanceId));
+    setCraftItems((prev) => prev.filter((item) => item.instanceId !== instanceId));
   };
 
   // Update item count
   const handleUpdateCount = (instanceId: string, newCount: number) => {
-    setRefineItems((prev) =>
+    setCraftItems((prev) =>
       prev.map((item) =>
         item.instanceId === instanceId
           ? { ...item, count: Math.max(0, newCount) }
@@ -142,7 +105,7 @@ export default function RefiningCalculatorPage() {
 
   // Update usage fee
   const handleUpdateUsageFee = (instanceId: string, newFee: number) => {
-    setRefineItems((prev) =>
+    setCraftItems((prev) =>
       prev.map((item) =>
         item.instanceId === instanceId
           ? { ...item, usageFee: Math.max(0, newFee) }
@@ -151,21 +114,10 @@ export default function RefiningCalculatorPage() {
     );
   };
 
-  // Update sell price
-  const handleUpdateSellPrice = (instanceId: string, newPrice: number) => {
-    setRefineItems((prev) =>
-      prev.map((item) =>
-        item.instanceId === instanceId
-          ? { ...item, sellPrice: Math.max(0, newPrice) }
-          : item
-      )
-    );
-  };
-
-  // Pull Market Prices
+  // Pull Market Prices (simulate updating unitCosts based on default baseCost)
   const handlePullMarketPrices = () => {
     const updatedCosts: Record<string, number> = { ...unitCosts };
-    refineItems.forEach((ci) => {
+    craftItems.forEach((ci) => {
       ci.item.ingredients.forEach((ing) => {
         const key = getIngredientCanonicalKey(ing);
         updatedCosts[key] = ing.baseCost;
@@ -174,17 +126,17 @@ export default function RefiningCalculatorPage() {
     setUnitCosts(updatedCosts);
   };
 
-  // Calculate Fee per refine row
-  const calculateItemFee = (ci: SelectedRefineItem) => {
+  // Calculate Fee per craft row
+  const calculateItemFee = (ci: SelectedCraftItem) => {
     return Math.round((ci.count * ci.item.nutritionPerCraft * ci.usageFee) / 100);
   };
 
   // Total Usage Fee across all items
   const totalFeeCost = useMemo(() => {
-    return refineItems.reduce((sum, ci) => sum + calculateItemFee(ci), 0);
-  }, [refineItems]);
+    return craftItems.reduce((sum, ci) => sum + calculateItemFee(ci), 0);
+  }, [craftItems]);
 
-  // Aggregate ingredients across all refining items (Merges identical items into one row)
+  // Aggregate ingredients across all craft items (Merges identical items into one row with total quantity)
   const aggregatedIngredients = useMemo(() => {
     const map = new Map<
       string,
@@ -194,7 +146,7 @@ export default function RefiningCalculatorPage() {
       }
     >();
 
-    refineItems.forEach((ci) => {
+    craftItems.forEach((ci) => {
       ci.item.ingredients.forEach((ing) => {
         const required = ing.requiredPerCraft * ci.count;
         const key = getIngredientCanonicalKey(ing);
@@ -205,7 +157,7 @@ export default function RefiningCalculatorPage() {
           map.set(key, {
             ingredient: {
               ...ing,
-              id: key,
+              id: key, // Use canonical key so haveAmounts and unitCosts match seamlessly
             },
             totalRequired: required,
           });
@@ -214,10 +166,10 @@ export default function RefiningCalculatorPage() {
     });
 
     return Array.from(map.values());
-  }, [refineItems]);
+  }, [craftItems]);
 
-  // Total Gross Material Cost
-  const grossMaterialCost = useMemo(() => {
+  // Total Material Cost
+  const totalMaterialCost = useMemo(() => {
     return aggregatedIngredients.reduce((sum, ing) => {
       const have = haveAmounts[ing.ingredient.id] || 0;
       const needed = Math.max(0, ing.totalRequired - have);
@@ -226,44 +178,14 @@ export default function RefiningCalculatorPage() {
     }, 0);
   }, [aggregatedIngredients, haveAmounts, unitCosts]);
 
-  // Calculate Returned Materials Value from RRR
-  const returnedMaterialsValue = useMemo(() => {
-    let totalReturnVal = 0;
-    refineItems.forEach((ci) => {
-      const rrr = getItemRRR(ci.item);
-      const itemGrossCost = ci.item.ingredients.reduce((acc, ing) => {
-        const key = getIngredientCanonicalKey(ing);
-        const cost = unitCosts[key] || ing.baseCost;
-        return acc + ing.requiredPerCraft * ci.count * cost;
-      }, 0);
-      totalReturnVal += Math.round(itemGrossCost * rrr);
-    });
-    return totalReturnVal;
-  }, [refineItems, unitCosts, useFocus, selectedCity]);
-
-  // Net Refining Cost = Gross Costs - Returned Material Value + Usage Fees
-  const totalCost = Math.max(0, grossMaterialCost - returnedMaterialsValue + totalFeeCost);
-
-  // Gross Revenue from selling refined items
-  const grossRevenue = useMemo(() => {
-    return refineItems.reduce((sum, ci) => sum + ci.count * ci.sellPrice, 0);
-  }, [refineItems]);
-
-  // Market Taxes (4% Premium / 8% Non-Premium + 2.5% Setup order)
-  const taxRate = hasPremium ? 0.04 : 0.08;
-  const totalMarketTax = Math.round(grossRevenue * (taxRate + 0.025));
-  const netRevenue = grossRevenue - totalMarketTax;
-
-  // Net Profit
-  const netProfit = netRevenue - totalCost;
-  const roi = totalCost > 0 ? (netProfit / totalCost) * 100 : 0;
+  const totalCost = totalFeeCost + totalMaterialCost;
 
   // Fame Metrics
   const fameMetrics = useMemo(() => {
     let mainFame = 0;
     let subFame = 0;
 
-    refineItems.forEach((ci) => {
+    craftItems.forEach((ci) => {
       mainFame += ci.count * ci.item.famePerCraft;
       subFame += ci.count * ci.item.subFamePerCraft;
     });
@@ -273,9 +195,9 @@ export default function RefiningCalculatorPage() {
       subFame,
       total: mainFame + subFame,
     };
-  }, [refineItems]);
+  }, [craftItems]);
 
-  // Enchantment border helper
+  // Enchantment styling helper
   const getEnchantBorder = (enchant: number) => {
     switch (enchant) {
       case 1:
@@ -295,23 +217,18 @@ export default function RefiningCalculatorPage() {
     <div className="min-h-screen bg-background text-foreground p-4 lg:p-8 font-sans">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl lg:text-2xl font-semibold text-foreground tracking-tight flex items-center gap-2">
-            <span>Refining Calculator</span>
-          </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Resource Return Rate (RRR), material aggregation, and net profit analysis
-          </p>
-        </div>
+        <h1 className="text-xl lg:text-2xl font-semibold text-foreground tracking-tight">
+          Craft Calculator
+        </h1>
         <a
           href="#"
           className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
         >
-          Albion Refining Engine
+          Albion Crafting Engine
         </a>
       </div>
 
-      {/* Action Bar (Identical clean layout as Crafting Calculator) */}
+      {/* Action Bar */}
       <div className="flex flex-wrap items-center gap-2.5 mb-8">
         {/* Add Item Button */}
         <button
@@ -329,16 +246,16 @@ export default function RefiningCalculatorPage() {
           Pull Market Prices
         </button>
 
-        {/* City Dropdown with Bonus indicator */}
+        {/* City Dropdown */}
         <div className="relative">
           <select
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
             className="appearance-none bg-secondary hover:bg-secondary/80 text-secondary-foreground text-xs font-medium px-4 py-2 pr-8 rounded-none border border-border focus:outline-none transition-colors cursor-pointer"
           >
-            {REFINING_CITIES.map((city) => (
-              <option key={city.name} value={city.name}>
-                {city.name} - {city.bonusNote}
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
               </option>
             ))}
           </select>
@@ -348,39 +265,13 @@ export default function RefiningCalculatorPage() {
           />
         </div>
 
-        {/* Focus Toggle */}
-        <button
-          onClick={() => setUseFocus(!useFocus)}
-          className={`px-4 py-2 text-xs font-medium rounded-none border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
-            useFocus
-              ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 font-semibold"
-              : "bg-secondary border-border text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <IconFlame size={14} className={useFocus ? "text-amber-500 fill-amber-500/30" : ""} />
-          <span>{useFocus ? "Focus: Active (53.9% RRR)" : "Focus: Off (36.7% RRR)"}</span>
-        </button>
-
-        {/* Premium Toggle */}
-        <button
-          onClick={() => setHasPremium(!hasPremium)}
-          className={`px-4 py-2 text-xs font-medium rounded-none border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
-            hasPremium
-              ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 font-semibold"
-              : "bg-secondary border-border text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <IconCrown size={14} className={hasPremium ? "text-amber-400 fill-amber-400/20" : ""} />
-          <span>{hasPremium ? "Premium (4% Tax)" : "No Premium (8% Tax)"}</span>
-        </button>
-
         {/* Recent Items Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsRecentDropdownOpen(!isRecentDropdownOpen)}
             className="bg-secondary hover:bg-secondary/80 text-secondary-foreground text-xs font-medium px-4 py-2 pr-8 rounded-none border border-border flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <span>Recent Resources</span>
+            <span>Recent Items</span>
             <IconChevronDown
               size={14}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
@@ -388,37 +279,35 @@ export default function RefiningCalculatorPage() {
           </button>
 
           {isRecentDropdownOpen && (
-            <div className="absolute left-0 top-full mt-1.5 w-64 bg-popover text-popover-foreground border border-border rounded-md shadow-2xl z-40 py-1 max-h-64 overflow-y-auto">
-              {GLOBAL_ALBION_ITEMS.filter((i) => i.category === "Refining")
-                .slice(0, 8)
-                .map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      handleAddItem(item);
-                      setIsRecentDropdownOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 text-xs text-foreground hover:bg-accent flex items-center gap-2.5 cursor-pointer"
-                  >
-                    <span className="w-5 h-5 flex items-center justify-center bg-muted text-[10px] font-bold text-amber-500 font-mono rounded-xs border border-border">
-                      {item.tierRoman}
-                    </span>
-                    <span className="truncate">{item.name}</span>
-                  </button>
-                ))}
+            <div className="absolute left-0 top-full mt-1.5 w-60 bg-popover text-popover-foreground border border-border rounded-md shadow-2xl z-40 py-1 max-h-64 overflow-y-auto">
+              {GLOBAL_ALBION_ITEMS.slice(0, 8).map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    handleAddItem(item);
+                    setIsRecentDropdownOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-foreground hover:bg-accent flex items-center gap-2.5 cursor-pointer"
+                >
+                  <span className="w-5 h-5 flex items-center justify-center bg-muted text-[10px] font-bold text-amber-500 font-mono rounded-xs border border-border">
+                    {item.tierRoman}
+                  </span>
+                  <span className="truncate">{item.name}</span>
+                </button>
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* SECTION 1: Items to refine */}
+      {/* SECTION 1: Items to craft */}
       <div className="bg-card rounded-none border border-border p-4 lg:p-6 mb-6 shadow-xs">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Items to refine
+            Items to craft
           </h2>
           <span className="text-[11px] text-muted-foreground">
-            {refineItems.length} {refineItems.length === 1 ? "resource" : "resources"} in queue
+            {craftItems.length} {craftItems.length === 1 ? "recipe" : "recipes"} active
           </span>
         </div>
 
@@ -429,25 +318,22 @@ export default function RefiningCalculatorPage() {
                 <th className="w-10 py-2.5 px-3"></th>
                 <th className="w-16 py-2.5 px-3 font-medium">Item</th>
                 <th className="py-2.5 px-3 font-medium">Name</th>
-                <th className="w-36 py-2.5 px-3 font-medium">Batch Output</th>
-                <th className="w-36 py-2.5 px-3 font-medium">Sell Price</th>
-                <th className="w-36 py-2.5 px-3 font-medium">Usage Fee</th>
+                <th className="w-44 py-2.5 px-3 font-medium">Count</th>
+                <th className="w-44 py-2.5 px-3 font-medium">Usage Fee</th>
                 <th className="w-28 py-2.5 px-3 font-medium text-right pr-4">Σ Fee</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
-              {refineItems.length === 0 ? (
+              {craftItems.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-muted-foreground text-xs">
-                    No items in refining queue. Click{" "}
+                  <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
+                    No items in crafting queue. Click{" "}
                     <strong className="text-primary font-semibold">Add Item</strong> above.
                   </td>
                 </tr>
               ) : (
-                refineItems.map((ci) => {
+                craftItems.map((ci) => {
                   const fee = calculateItemFee(ci);
-                  const rrrPercent = (getItemRRR(ci.item) * 100).toFixed(1);
-                  const isBonus = isCityBonusActive(ci.item);
 
                   return (
                     <tr key={ci.instanceId} className="group hover:bg-muted/40 transition-colors">
@@ -483,20 +369,14 @@ export default function RefiningCalculatorPage() {
                         </div>
                       </td>
 
-                      {/* Name & RRR Status */}
+                      {/* Name */}
                       <td className="py-3 px-3">
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
                           <span className="text-primary hover:underline font-semibold cursor-pointer">
                             {ci.item.name}
                           </span>
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded border font-mono font-semibold ${
-                              isBonus
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                                : "bg-muted text-muted-foreground border-border"
-                            }`}
-                          >
-                            {rrrPercent}% RRR {isBonus ? "(City Bonus)" : ""}
+                          <span className="text-[10px] text-muted-foreground font-mono">
+                            ({ci.item.category})
                           </span>
                         </div>
                       </td>
@@ -509,19 +389,7 @@ export default function RefiningCalculatorPage() {
                           onChange={(e) =>
                             handleUpdateCount(ci.instanceId, parseInt(e.target.value) || 0)
                           }
-                          className="w-full max-w-[130px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
-                        />
-                      </td>
-
-                      {/* Sell Price input */}
-                      <td className="py-3 px-3 pr-4">
-                        <input
-                          type="number"
-                          value={ci.sellPrice}
-                          onChange={(e) =>
-                            handleUpdateSellPrice(ci.instanceId, parseInt(e.target.value) || 0)
-                          }
-                          className="w-full max-w-[130px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
+                          className="w-full max-w-[170px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
                         />
                       </td>
 
@@ -533,7 +401,7 @@ export default function RefiningCalculatorPage() {
                           onChange={(e) =>
                             handleUpdateUsageFee(ci.instanceId, parseInt(e.target.value) || 0)
                           }
-                          className="w-full max-w-[130px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
+                          className="w-full max-w-[170px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
                         />
                       </td>
 
@@ -550,11 +418,11 @@ export default function RefiningCalculatorPage() {
         </div>
       </div>
 
-      {/* SECTION 2: Shopping list / Raw Materials Required (MERGED AS REQUESTED) */}
+      {/* SECTION 2: Shopping list (HIGH CONTRAST & CLEAR VISIBILITY FOR REQUIRED OPTION DATA) */}
       <div className="bg-card rounded-none border border-border p-4 lg:p-6 mb-8 shadow-xs">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Shopping list (Raw Materials Required)
+            Shopping list
           </h2>
           <span className="text-[11px] text-muted-foreground">
             {aggregatedIngredients.length} required {aggregatedIngredients.length === 1 ? "ingredient" : "ingredients"}
@@ -568,10 +436,12 @@ export default function RefiningCalculatorPage() {
                 <th className="w-12 py-2.5 px-3 font-medium">Craft</th>
                 <th className="w-16 py-2.5 px-3 font-medium">Item</th>
                 <th className="py-2.5 px-3 font-medium">Name</th>
+                {/* REQUIRED COLUMN (Highlighted header) */}
                 <th className="w-28 py-2.5 px-3 font-semibold text-foreground">
                   Required
                 </th>
                 <th className="w-36 py-2.5 px-3 font-medium">Have</th>
+                {/* Σ REQUIRED COLUMN */}
                 <th className="w-32 py-2.5 px-3 font-semibold text-foreground">
                   Σ Required
                 </th>
@@ -583,7 +453,7 @@ export default function RefiningCalculatorPage() {
               {aggregatedIngredients.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                    Shopping list is empty. Add resources to refining queue.
+                    Shopping list is empty. Add items to craft queue.
                   </td>
                 </tr>
               ) : (
@@ -638,7 +508,9 @@ export default function RefiningCalculatorPage() {
                         </span>
                       </td>
 
-                      {/* Required (Merged Total) */}
+                      {/* ======================================================= */}
+                      {/* REQUIRED OPTION DATA (NOW CRYSTAL CLEAR, HIGH CONTRAST) */}
+                      {/* ======================================================= */}
                       <td className="py-3 px-3">
                         <span className="inline-flex items-center px-2.5 py-1 rounded font-mono font-bold text-xs bg-muted text-foreground border border-border shadow-2xs tabular-nums">
                           {itemRow.totalRequired.toLocaleString()}
@@ -660,7 +532,9 @@ export default function RefiningCalculatorPage() {
                         />
                       </td>
 
-                      {/* Σ Required */}
+                      {/* ======================================================= */}
+                      {/* Σ REQUIRED (NOW CRYSTAL CLEAR WITH DYNAMIC STATUS TINT) */}
+                      {/* ======================================================= */}
                       <td className="py-3 px-3">
                         <span
                           className={`inline-flex items-center px-2.5 py-1 rounded font-mono font-bold text-xs tabular-nums ${
@@ -700,48 +574,18 @@ export default function RefiningCalculatorPage() {
           </table>
         </div>
 
-        {/* BOTTOM TOTALS / REFINING PROFIT SUMMARY */}
+        {/* BOTTOM TOTALS / SUMMARY */}
         <div className="mt-8 pt-6 border-t border-border flex flex-col items-end space-y-4 pr-2">
-          {/* RRR Returned Materials Discount */}
+          {/* Σ Costs (with background container as requested) */}
           <div className="flex items-center justify-end gap-8 sm:gap-16">
-            <span className="text-xs text-muted-foreground">RRR Material Recovery Value</span>
-            <div className="text-right">
-              <span className="text-xs font-mono font-bold text-emerald-500">
-                - {returnedMaterialsValue.toLocaleString()} Silver (Recovered)
-              </span>
-            </div>
-          </div>
-
-          {/* Σ Costs (with background container like crafting) */}
-          <div className="flex items-center justify-end gap-8 sm:gap-16">
-            <span className="text-sm font-semibold text-foreground">Σ Net Cost</span>
+            <span className="text-sm font-semibold text-foreground">Σ Costs</span>
             <div className="text-right">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-muted/80 border border-border rounded font-mono font-bold text-lg sm:text-xl text-foreground shadow-2xs">
                 <IconCoins size={18} className="text-amber-400 shrink-0" />
                 <span>{totalCost.toLocaleString()} Silver</span>
               </div>
               <div className="text-[11px] text-muted-foreground mt-1">
-                Gross: {grossMaterialCost.toLocaleString()} | Fee: {totalFeeCost.toLocaleString()}
-              </div>
-            </div>
-          </div>
-
-          {/* Net Profit Banner */}
-          <div className="flex items-center justify-end gap-8 sm:gap-16">
-            <span className="text-sm font-semibold text-foreground">Net Refining Profit</span>
-            <div className="text-right">
-              <div
-                className={`inline-flex items-center gap-2 px-3.5 py-1.5 border rounded font-mono font-bold text-lg sm:text-xl shadow-2xs ${
-                  netProfit >= 0
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                    : "bg-destructive/10 text-destructive border-destructive/30"
-                }`}
-              >
-                <IconTrendingUp size={18} />
-                <span>{netProfit > 0 ? "+" : ""}{netProfit.toLocaleString()} Silver</span>
-              </div>
-              <div className="text-[11px] text-muted-foreground mt-1">
-                Net Revenue: {netRevenue.toLocaleString()} | ROI: <span className="font-semibold text-foreground">{roi.toFixed(1)}%</span>
+                Fee costs included ({totalFeeCost.toLocaleString()})
               </div>
             </div>
           </div>
@@ -762,15 +606,14 @@ export default function RefiningCalculatorPage() {
       </div>
 
       {/* ========================================================================= */}
-      {/* GLOBAL MARKETPLACE RESOURCE SELECT MODAL */}
+      {/* GLOBAL MARKETPLACE ITEM SELECT MODAL (MATCHING USER SCREENSHOT) */}
       {/* ========================================================================= */}
       <AlbionItemSelectModal
         isOpen={isAddItemOpen}
         onClose={() => setIsAddItemOpen(false)}
         onSelectItem={handleAddItem}
-        title="Refining Resource Catalog"
+        title="Marketplace"
         actionLabel="Select"
-        initialCategory="Refining"
       />
     </div>
   );

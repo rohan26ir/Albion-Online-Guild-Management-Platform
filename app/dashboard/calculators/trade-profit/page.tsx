@@ -1,722 +1,799 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from "react";
 import {
-  IconArrowsExchange,
-  IconCoin,
-  IconTrendingUp,
-  IconPercentage,
+  AlbionItem,
+  GLOBAL_ALBION_ITEMS,
+} from "@/data/global-items";
+import { AlbionItemSelectModal } from "@/components/albion/shared/AlbionItemSelectModal";
+import {
+  IconX,
+  IconCoins,
   IconCrown,
+  IconTrendingUp,
+  IconChevronDown,
   IconBuildingStore,
-  IconRotate,
-  IconCheck,
-  IconAlertTriangle,
-  IconSparkles,
-  IconCopy,
-  IconShield,
-  IconTruck,
-  IconAdjustmentsHorizontal,
-  IconReceipt2,
-} from '@tabler/icons-react';
-import { Button } from '@/components/ui/button';
+} from "@tabler/icons-react";
 
-// Formats numbers to k, m, b with max 2 digits after dot (e.g. 10.55m, 1k, 1m)
-function formatSilver(val: number): string {
-  const abs = Math.abs(val);
-  const sign = val < 0 ? '-' : '';
-
-  if (abs >= 1_000_000_000) {
-    const num = abs / 1_000_000_000;
-    const formatted = num.toFixed(2).replace(/\.?0+$/, '');
-    return `${sign}${formatted}b`;
-  }
-  if (abs >= 1_000_000) {
-    const num = abs / 1_000_000;
-    const formatted = num.toFixed(2).replace(/\.?0+$/, '');
-    return `${sign}${formatted}m`;
-  }
-  if (abs >= 1_000) {
-    const num = abs / 1_000;
-    const formatted = num.toFixed(2).replace(/\.?0+$/, '');
-    return `${sign}${formatted}k`;
-  }
-  return `${sign}${abs.toLocaleString()}`;
-}
-
-// Interactive Number component: shows short notation (10.55m, 1k) and full digits on hover
-function SilverValue({
-  val,
-  showSign = false,
-  suffix = 'Silver',
-  className = '',
-}: {
-  val: number;
-  showSign?: boolean;
-  suffix?: string;
-  className?: string;
-}) {
-  const sign = showSign && val > 0 ? '+' : '';
-  const shortText = formatSilver(val);
-  const fullText = `${val > 0 && showSign ? '+' : ''}${val.toLocaleString()}${suffix ? ' ' + suffix : ''}`;
-
-  return (
-    <span
-      title={fullText}
-      className={`cursor-help transition-opacity hover:opacity-85 underline decoration-dotted decoration-white/25 underline-offset-3 inline-flex items-baseline ${className}`}
-    >
-      <span>
-        {sign}
-        {shortText}
-      </span>
-      {suffix && <span className="ml-1 text-[0.8em] font-bold opacity-80">{suffix}</span>}
-    </span>
-  );
+export interface SelectedTradeItem {
+  instanceId: string;
+  item: AlbionItem;
+  quantity: number;
+  buyPrice: number;
+  sellPrice: number;
+  transportFeePerUnit: number;
 }
 
 export default function TradeProfitCalculatorPage() {
-  // 1. User Inputs
-  const [itemName, setItemName] = useState('T6 Bloodletter');
-  const [buyPrice, setBuyPrice] = useState<number>(120000);
-  const [sellPrice, setSellPrice] = useState<number>(165000);
-  const [quantity, setQuantity] = useState<number>(10);
-  const [buyMethod, setBuyMethod] = useState<'order' | 'instant'>('order');
-  const [sellMethod, setSellMethod] = useState<'order' | 'instant'>('order');
+  const [isAddItemOpen, setIsAddItemOpen] = useState(false);
+  const [isRecentDropdownOpen, setIsRecentDropdownOpen] = useState(false);
 
-  // 2. System Settings (Taxes: Free vs Premium toggle + extra fees)
-  const [hasPremium, setHasPremium] = useState<boolean>(true);
-  const [transportCost, setTransportCost] = useState<number>(0);
-  const [relistCount, setRelistCount] = useState<number>(0);
-  const [copied, setCopied] = useState(false);
+  // Market Settings
+  const [hasPremium, setHasPremium] = useState(true);
+  const [buyMethod, setBuyMethod] = useState<"order" | "instant">("order");
+  const [sellMethod, setSellMethod] = useState<"order" | "instant">("order");
 
-  // Albion Online Market Rules:
-  // - Setup fee on orders (Buy Order or Sell Order): 2.5%
-  // - Sales Tax on market transaction completion:
-  //     * Premium account: 4%
-  //     * Free / Non-Premium account: 8%
-  // - Relist fee: 2.5% per price modification
-  const buySetupRate = buyMethod === 'order' ? 0.025 : 0;
-  const sellSetupRate = sellMethod === 'order' ? 0.025 : 0;
+  // Initial Item: Expert's Broadsword
+  const initialTradeItem =
+    GLOBAL_ALBION_ITEMS.find((i) => i.identifier === "T5_MAIN_SWORD") ||
+    GLOBAL_ALBION_ITEMS[0];
+
+  const [tradeItems, setTradeItems] = useState<SelectedTradeItem[]>([
+    {
+      instanceId: "initial-trade-broadsword",
+      item: initialTradeItem,
+      quantity: 10,
+      buyPrice: Math.round(initialTradeItem.price * 0.85), // Estimated buy order
+      sellPrice: Math.round(initialTradeItem.price * 1.35), // Estimated black market sell
+      transportFeePerUnit: 0,
+    },
+  ]);
+
+  // Tax rates (Albion Online rules)
+  // Setup Fee on order: 2.5%
+  // Sales Tax: 4% with Premium, 8% without Premium
+  const buySetupRate = buyMethod === "order" ? 0.025 : 0;
+  const sellSetupRate = sellMethod === "order" ? 0.025 : 0;
   const salesTaxRate = hasPremium ? 0.04 : 0.08;
-  const nonPremiumTaxRate = 0.08;
-  const relistFeeRate = relistCount * 0.025;
 
-  // Calculations
-  const totalBuyBase = buyPrice * quantity;
-  const buySetupFee = Math.round(totalBuyBase * buySetupRate);
-  const totalCost = totalBuyBase + buySetupFee + transportCost;
+  // Add Item to trade queue
+  const handleAddItem = (item: AlbionItem) => {
+    const defaultBuy = Math.round(item.price * 0.85);
+    const defaultSell = Math.round(item.price * 1.35);
 
-  const totalGrossRevenue = sellPrice * quantity;
-  const sellSetupFee = Math.round(totalGrossRevenue * sellSetupRate);
-  const marketTaxFee = Math.round(totalGrossRevenue * salesTaxRate);
-  const nonPremTaxFee = Math.round(totalGrossRevenue * nonPremiumTaxRate);
-  const premiumSavings = hasPremium ? nonPremTaxFee - marketTaxFee : 0;
-  const relistFee = Math.round(totalGrossRevenue * relistFeeRate);
-  const totalFees = buySetupFee + sellSetupFee + marketTaxFee + relistFee;
-
-  const netRevenue = totalGrossRevenue - (sellSetupFee + marketTaxFee + relistFee);
-  const netProfit = netRevenue - totalCost;
-  const profitPerItem = quantity > 0 ? Math.round(netProfit / quantity) : 0;
-  const roi = totalCost > 0 ? (netProfit / totalCost) * 100 : 0;
-  const margin = totalGrossRevenue > 0 ? (netProfit / totalGrossRevenue) * 100 : 0;
-
-  // Break-even sell price (per unit)
-  const sellDeductionRatio = 1 - (sellSetupRate + salesTaxRate + relistFeeRate);
-  const breakEvenSellPrice =
-    sellDeductionRatio > 0 && quantity > 0
-      ? Math.ceil(totalCost / (quantity * sellDeductionRatio))
-      : 0;
-
-  const handleReset = () => {
-    setItemName('');
-    setBuyPrice(100000);
-    setSellPrice(140000);
-    setQuantity(10);
-    setBuyMethod('order');
-    setSellMethod('order');
-    setHasPremium(true);
-    setTransportCost(0);
-    setRelistCount(0);
+    const newItem: SelectedTradeItem = {
+      instanceId: `${item.id}-${Date.now()}`,
+      item,
+      quantity: 10,
+      buyPrice: defaultBuy,
+      sellPrice: defaultSell,
+      transportFeePerUnit: 0,
+    };
+    setTradeItems((prev) => [...prev, newItem]);
   };
 
-  const handleCopySummary = () => {
-    const summary = `--- Albion Online Trade Profit ---
-Item: ${itemName || 'Custom Trade'} (Qty: ${quantity.toLocaleString()})
-Buy: ${buyPrice.toLocaleString()} Silver (${buyMethod === 'order' ? 'Buy Order' : 'Instant Buy'})
-Sell: ${sellPrice.toLocaleString()} Silver (${sellMethod === 'order' ? 'Sell Order' : 'Instant Sell'})
-Account: ${hasPremium ? 'Premium (4% Tax)' : 'Free (8% Tax)'}
-Total Investment: ${totalCost.toLocaleString()} Silver
-Gross Sales: ${totalGrossRevenue.toLocaleString()} Silver
-Taxes & Fees: -${totalFees.toLocaleString()} Silver
-Net Profit: ${netProfit > 0 ? '+' : ''}${netProfit.toLocaleString()} Silver (${roi.toFixed(1)}% ROI)
-Break-even: ${breakEvenSellPrice.toLocaleString()} Silver/unit`;
+  // Remove item
+  const handleRemoveItem = (instanceId: string) => {
+    setTradeItems((prev) => prev.filter((item) => item.instanceId !== instanceId));
+  };
 
-    navigator.clipboard.writeText(summary);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  // Update quantity
+  const handleUpdateQuantity = (instanceId: string, newQty: number) => {
+    setTradeItems((prev) =>
+      prev.map((item) =>
+        item.instanceId === instanceId
+          ? { ...item, quantity: Math.max(1, newQty) }
+          : item
+      )
+    );
+  };
+
+  // Update Buy Price
+  const handleUpdateBuyPrice = (instanceId: string, newPrice: number) => {
+    setTradeItems((prev) =>
+      prev.map((item) =>
+        item.instanceId === instanceId
+          ? { ...item, buyPrice: Math.max(0, newPrice) }
+          : item
+      )
+    );
+  };
+
+  // Update Sell Price
+  const handleUpdateSellPrice = (instanceId: string, newPrice: number) => {
+    setTradeItems((prev) =>
+      prev.map((item) =>
+        item.instanceId === instanceId
+          ? { ...item, sellPrice: Math.max(0, newPrice) }
+          : item
+      )
+    );
+  };
+
+  // Reset to default market margins
+  const handlePullMarketPrices = () => {
+    setTradeItems((prev) =>
+      prev.map((item) => ({
+        ...item,
+        buyPrice: Math.round(item.item.price * 0.85),
+        sellPrice: Math.round(item.item.price * 1.35),
+      }))
+    );
+  };
+
+  // Calculate per item metrics
+  const getItemMetrics = (ti: SelectedTradeItem) => {
+    const grossBuy = ti.buyPrice * ti.quantity;
+    const buySetupFee = Math.round(grossBuy * buySetupRate);
+    const totalBuyCapital = grossBuy + buySetupFee + ti.transportFeePerUnit * ti.quantity;
+
+    const grossSell = ti.sellPrice * ti.quantity;
+    const sellSetupFee = Math.round(grossSell * sellSetupRate);
+    const sellSalesTax = Math.round(grossSell * salesTaxRate);
+    const totalSellDeductions = sellSetupFee + sellSalesTax;
+    const netSellReturn = grossSell - totalSellDeductions;
+
+    const netItemProfit = netSellReturn - totalBuyCapital;
+    const itemRoi = totalBuyCapital > 0 ? (netItemProfit / totalBuyCapital) * 100 : 0;
+
+    return {
+      grossBuy,
+      buySetupFee,
+      totalBuyCapital,
+      grossSell,
+      sellSetupFee,
+      sellSalesTax,
+      totalSellDeductions,
+      totalFeesAndTaxes: buySetupFee + totalSellDeductions,
+      netSellReturn,
+      netItemProfit,
+      itemRoi,
+    };
+  };
+
+  // Aggregate Total Metrics
+  const summary = useMemo(() => {
+    let totalGrossBuy = 0;
+    let totalBuySetupFees = 0;
+    let totalCapital = 0; // Total Buying Cost
+    let totalGrossSell = 0;
+    let totalSellSetupFees = 0;
+    let totalSellSalesTaxes = 0;
+    let totalSellDeductions = 0;
+    let totalNetSellReturn = 0; // Total Selling Proceeds/Return
+    let totalNetProfit = 0;
+    let totalUnits = 0;
+
+    tradeItems.forEach((ti) => {
+      const m = getItemMetrics(ti);
+      totalGrossBuy += m.grossBuy;
+      totalBuySetupFees += m.buySetupFee;
+      totalCapital += m.totalBuyCapital;
+      totalGrossSell += m.grossSell;
+      totalSellSetupFees += m.sellSetupFee;
+      totalSellSalesTaxes += m.sellSalesTax;
+      totalSellDeductions += (m.sellSetupFee + m.sellSalesTax);
+      totalNetSellReturn += m.netSellReturn;
+      totalNetProfit += m.netItemProfit;
+      totalUnits += ti.quantity;
+    });
+
+    const overallRoi = totalCapital > 0 ? (totalNetProfit / totalCapital) * 100 : 0;
+
+    return {
+      totalGrossBuy,
+      totalBuySetupFees,
+      totalCapital,
+      totalGrossSell,
+      totalSellSetupFees,
+      totalSellSalesTaxes,
+      totalSellDeductions,
+      totalNetSellReturn,
+      totalNetProfit,
+      totalUnits,
+      overallRoi,
+    };
+  }, [tradeItems, buyMethod, sellMethod, hasPremium]);
+
+  // Enchantment border helper
+  const getEnchantBorder = (enchant: number) => {
+    switch (enchant) {
+      case 1:
+        return "border-emerald-500/70 shadow-[0_0_8px_rgba(16,185,129,0.25)]";
+      case 2:
+        return "border-sky-500/70 shadow-[0_0_8px_rgba(14,165,233,0.25)]";
+      case 3:
+        return "border-purple-500/70 shadow-[0_0_8px_rgba(168,85,247,0.25)]";
+      case 4:
+        return "border-amber-400/80 shadow-[0_0_8px_rgba(251,191,36,0.3)]";
+      default:
+        return "border-border";
+    }
   };
 
   return (
-    <div className="space-y-6 p-4 md:p-8 max-w-7xl mx-auto">
-      {/* Header Banner */}
-      <div className="rounded-2xl border border-white/10 bg-zinc-900/90 p-6 sm:p-7 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
+    <div className="min-h-screen bg-background text-foreground p-4 lg:p-8 font-sans">
+      {/* Top Header */}
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
-              Albion Market Economy
-            </span>
-            <span className="text-xs text-white/60">Silver & Profit Calculator</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-            <IconArrowsExchange className="size-8 text-blue-400" />
-            Buy / Sell Profit Calculator
+          <h1 className="text-xl lg:text-2xl font-semibold text-foreground tracking-tight flex items-center gap-2">
+            <span>Buy / Sell Profit Calculator</span>
           </h1>
-          <p className="text-sm text-white/70 mt-1 max-w-2xl leading-relaxed">
-            Calculate accurate net profit returns in <strong className="text-blue-400 font-bold">Silver</strong> with order setup fees (2.5%), sales taxes (4% vs 8%), and break-even flip prices.
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Market order setup fees, sales tax deductions, capital costs, and net profit margins
           </p>
         </div>
-
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopySummary}
-            className="h-9 gap-1.5 text-xs font-semibold cursor-pointer border-white/15 hover:border-blue-400 bg-zinc-800 text-white"
-          >
-            {copied ? <IconCheck className="size-4 text-blue-400" /> : <IconCopy className="size-4" />}
-            {copied ? 'Summary Copied!' : 'Copy Trade'}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleReset}
-            className="h-9 text-xs gap-1.5 text-white/70 hover:text-white cursor-pointer"
-          >
-            <IconRotate className="size-3.5" />
-            Reset
-          </Button>
-        </div>
+        <a
+          href="#"
+          className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+        >
+          Albion Market Engine
+        </a>
       </div>
 
-      {/* SYSTEM TAX SETTING: Free vs Premium TOGGLE SWITCH (Position-Locked) */}
-      <div className="rounded-2xl border border-white/10 bg-zinc-900/90 p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Left Side Info: Fixed layout that does not resize */}
-        <div className="space-y-1 min-w-[240px]">
-          <div className="flex items-center gap-2">
-            <IconCrown className="size-4.5 text-blue-400" />
-            <h3 className="text-sm font-black uppercase tracking-wider text-white">
-              Account Status & Tax Rate
-            </h3>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-white/70">
-            <span>Marketplace Tax:</span>
-            <span className={`font-bold ${hasPremium ? 'text-blue-400' : 'text-red-400'}`}>
-              {hasPremium ? '4% (Premium Rate)' : '8% (Free Standard)'}
+      {/* Action Bar (Identical clean layout as Crafting & Refining) */}
+      <div className="flex flex-wrap items-center gap-2.5 mb-8">
+        {/* Add Item Button */}
+        <button
+          onClick={() => setIsAddItemOpen(true)}
+          className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs tracking-wide rounded-none transition-colors shadow-xs cursor-pointer"
+        >
+          Add Item
+        </button>
+
+        {/* Pull Market Prices Button */}
+        <button
+          onClick={handlePullMarketPrices}
+          className="px-4 py-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium text-xs tracking-wide rounded-none transition-colors shadow-xs cursor-pointer border border-border"
+        >
+          Pull Market Prices
+        </button>
+
+        {/* Recent Items Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setIsRecentDropdownOpen(!isRecentDropdownOpen)}
+            className="bg-secondary hover:bg-secondary/80 text-secondary-foreground text-xs font-medium px-4 py-2 pr-8 rounded-none border border-border flex items-center gap-1 transition-colors cursor-pointer"
+          >
+            <span>Recent Items</span>
+            <IconChevronDown
+              size={14}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
+          </button>
+
+          {isRecentDropdownOpen && (
+            <div className="absolute left-0 top-full mt-1.5 w-60 bg-popover text-popover-foreground border border-border rounded-md shadow-2xl z-40 py-1 max-h-64 overflow-y-auto">
+              {GLOBAL_ALBION_ITEMS.slice(0, 8).map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    handleAddItem(item);
+                    setIsRecentDropdownOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-foreground hover:bg-accent flex items-center gap-2.5 cursor-pointer"
+                >
+                  <span className="w-5 h-5 flex items-center justify-center bg-muted text-[10px] font-bold text-amber-500 font-mono rounded-xs border border-border">
+                    {item.tierRoman}
+                  </span>
+                  <span className="truncate">{item.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+
+
+        {/* Buy Order Mode Toggle */}
+        <button
+          onClick={() => setBuyMethod(buyMethod === "order" ? "instant" : "order")}
+          className={`px-3 py-2 text-xs font-medium rounded-none border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
+            buyMethod === "order"
+              ? "bg-primary/10 border-primary text-primary font-semibold"
+              : "bg-secondary border-border text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <IconBuildingStore size={14} />
+          <span>Buy: {buyMethod === "order" ? "Buy Order (2.5% Fee)" : "Instant Buy"}</span>
+        </button>
+
+        {/* Sell Order Mode Toggle */}
+        <button
+          onClick={() => setSellMethod(sellMethod === "order" ? "instant" : "order")}
+          className={`px-3 py-2 text-xs font-medium rounded-none border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
+            sellMethod === "order"
+              ? "bg-primary/10 border-primary text-primary font-semibold"
+              : "bg-secondary border-border text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <IconBuildingStore size={14} />
+          <span>Sell: {sellMethod === "order" ? "Sell Order (2.5% Fee)" : "Instant Sell"}</span>
+        </button>
+
+        {/* Premium Toggle */}
+        <button
+          onClick={() => setHasPremium(!hasPremium)}
+          className={`px-4 py-2 text-xs font-medium rounded-none border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
+            hasPremium
+              ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 font-semibold"
+              : "bg-secondary border-border text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <IconCrown size={14} className={hasPremium ? "text-amber-400 fill-amber-400/20" : ""} />
+          <span>{hasPremium ? "Premium (4% Tax)" : "No Premium (8% Tax)"}</span>
+        </button>
+      </div>
+
+      {/* 3 Top KPI Cards: Capital, Total Selling Return, and Net Profit % */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Card 1: Capital (Total Buying Cost) */}
+        <div className="bg-card border border-border p-4 shadow-xs">
+          <div className="flex items-center justify-between text-muted-foreground mb-1">
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Capital (Total Buying Cost)
             </span>
-            {hasPremium && premiumSavings > 0 && (
-              <span className="text-blue-300 font-semibold bg-blue-950/60 border border-blue-500/30 px-2 py-0.5 rounded-md">
-                Saves {formatSilver(premiumSavings)} Silver
-              </span>
-            )}
+            <IconCoins size={16} className="text-amber-400" />
+          </div>
+          <div className="text-xl font-bold font-mono text-foreground flex items-center gap-1.5">
+            <span>{summary.totalCapital.toLocaleString()}</span>
+            <span className="text-xs font-medium text-muted-foreground">Silver</span>
+          </div>
+          <div className="text-[11px] text-muted-foreground mt-1 flex items-center justify-between">
+            <span>Gross Buy: {summary.totalGrossBuy.toLocaleString()}</span>
+            <span>Fee ({buyMethod === "order" ? "2.5%" : "0%"}): +{summary.totalBuySetupFees.toLocaleString()}</span>
           </div>
         </div>
 
-        {/* Right Side: Position-Locked Fixed-Width Toggle Container */}
-        <div className="shrink-0 self-start md:self-auto">
-          <div className="inline-flex items-center bg-zinc-950 border border-white/15 p-1 rounded-xl shadow-inner select-none">
-            {/* Free Button (Fixed Width) */}
-            <button
-              type="button"
-              onClick={() => setHasPremium(false)}
-              className={`w-28 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-                !hasPremium
-                  ? 'bg-red-600 text-white shadow-md'
-                  : 'text-white/60 hover:text-white'
+        {/* Card 2: Total Selling Return */}
+        <div className="bg-card border border-border p-4 shadow-xs">
+          <div className="flex items-center justify-between text-muted-foreground mb-1">
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Total Selling Return
+            </span>
+            <IconBuildingStore size={16} className="text-primary" />
+          </div>
+          <div className="text-xl font-bold font-mono text-foreground flex items-center gap-1.5">
+            <span>{summary.totalNetSellReturn.toLocaleString()}</span>
+            <span className="text-xs font-medium text-muted-foreground">Silver</span>
+          </div>
+          <div className="text-[11px] text-muted-foreground mt-1 flex items-center justify-between">
+            <span>Gross Sell: {summary.totalGrossSell.toLocaleString()}</span>
+            <span>Taxes: -{summary.totalSellDeductions.toLocaleString()} ({sellMethod === "order" ? "2.5% + " : ""}{hasPremium ? "4%" : "8%"})</span>
+          </div>
+        </div>
+
+        {/* Card 3: Net Profit / Loss & Percentage */}
+        <div className={`border p-4 shadow-xs ${
+          summary.totalNetProfit >= 0
+            ? "bg-emerald-500/5 border-emerald-500/30"
+            : "bg-destructive/5 border-destructive/30"
+        }`}>
+          <div className="flex items-center justify-between text-muted-foreground mb-1">
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              {summary.totalNetProfit >= 0 ? "Net Trade Profit" : "Net Trade Loss"}
+            </span>
+            <span
+              className={`px-2 py-0.5 rounded font-mono font-bold text-xs ${
+                summary.overallRoi >= 0
+                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                  : "bg-destructive/15 text-destructive border border-destructive/30"
               }`}
             >
-              <IconShield className="size-3.5" />
-              Free (8%)
-            </button>
-
-            {/* Slider Switch */}
-            <button
-              type="button"
-              role="switch"
-              aria-checked={hasPremium}
-              onClick={() => setHasPremium(!hasPremium)}
-              className="mx-1 relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-zinc-800 border border-white/20 transition-colors cursor-pointer"
-            >
-              <span
-                className={`inline-block size-4 transform rounded-full transition-transform ${
-                  hasPremium ? 'translate-x-6 bg-blue-400' : 'translate-x-1 bg-red-400'
-                }`}
-              />
-            </button>
-
-            {/* Premium Button (Fixed Width) */}
-            <button
-              type="button"
-              onClick={() => setHasPremium(true)}
-              className={`w-28 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-                hasPremium
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              <IconCrown className="size-3.5" />
-              Premium (4%)
-            </button>
+              {summary.overallRoi >= 0 ? "+" : ""}
+              {summary.overallRoi.toFixed(1)}% {summary.totalNetProfit >= 0 ? "PROFIT" : "LOSS"}
+            </span>
+          </div>
+          <div className={`text-xl font-bold font-mono flex items-center gap-1.5 ${
+            summary.totalNetProfit >= 0
+              ? "text-emerald-600 dark:text-emerald-400"
+              : "text-destructive"
+          }`}>
+            <IconTrendingUp size={18} />
+            <span>
+              {summary.totalNetProfit > 0 ? "+" : ""}
+              {summary.totalNetProfit.toLocaleString()}
+            </span>
+            <span className="text-xs font-medium text-muted-foreground">Silver</span>
+          </div>
+          <div className="text-[11px] text-muted-foreground mt-1 flex items-center justify-between">
+            <span>Margin on {summary.totalUnits} {summary.totalUnits === 1 ? "unit" : "units"}</span>
+            <span>ROI on Capital: {summary.overallRoi.toFixed(1)}%</span>
           </div>
         </div>
       </div>
 
-      {/* Main Workbench Grid: Inputs (Left) vs Output (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: USER INPUTS */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="rounded-2xl border border-white/10 bg-zinc-900/90 p-5 sm:p-6 shadow-md space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <h2 className="text-sm font-black uppercase tracking-wider text-white flex items-center gap-2">
-                <IconBuildingStore className="size-4.5 text-blue-400" />
-                User Trade Inputs
-              </h2>
-              <span className="text-xs text-white/60">Price & Quantity Controls</span>
+      {/* SECTION 1: Items to trade / transport */}
+      <div className="bg-card rounded-none border border-border p-4 lg:p-6 mb-6 shadow-xs">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Items to Trade / Transport (Buy & Sell Setup)
+          </h2>
+          <span className="text-[11px] text-muted-foreground">
+            {tradeItems.length} {tradeItems.length === 1 ? "item" : "items"} in trade route
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead className="bg-muted/30">
+              <tr className="border-b border-border text-muted-foreground text-[11px] font-semibold uppercase tracking-wider">
+                <th className="w-10 py-2.5 px-3"></th>
+                <th className="w-16 py-2.5 px-3 font-medium">Item</th>
+                <th className="py-2.5 px-3 font-medium">Name</th>
+                <th className="w-32 py-2.5 px-3 font-medium">Quantity</th>
+                <th className="w-36 py-2.5 px-3 font-medium">Unit Buy Price</th>
+                <th className="w-36 py-2.5 px-3 font-medium">Unit Sell Price</th>
+                <th className="w-36 py-2.5 px-3 font-medium text-right">Total Buy Cost (Capital)</th>
+                <th className="w-36 py-2.5 px-3 font-medium text-right">Total Sell Return</th>
+                <th className="w-36 py-2.5 px-3 font-medium text-right pr-4">Net Profit (ROI %)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/60">
+              {tradeItems.length === 0 ? (
+                <tr>
+                  <td colSpan={9} className="py-8 text-center text-muted-foreground text-xs">
+                    No items in trade route. Click{" "}
+                    <strong className="text-primary font-semibold">Add Item</strong> above.
+                  </td>
+                </tr>
+              ) : (
+                tradeItems.map((ti) => {
+                  const m = getItemMetrics(ti);
+
+                  return (
+                    <tr key={ti.instanceId} className="group hover:bg-muted/40 transition-colors">
+                      {/* Delete button */}
+                      <td className="py-3 px-3">
+                        <button
+                          onClick={() => handleRemoveItem(ti.instanceId)}
+                          className="w-5 h-5 bg-muted hover:bg-destructive hover:text-destructive-foreground text-muted-foreground flex items-center justify-center rounded transition-colors cursor-pointer border border-border"
+                          title="Remove item"
+                        >
+                          <IconX size={12} />
+                        </button>
+                      </td>
+
+                      {/* Item Icon with Roman Numeral Tier Badge */}
+                      <td className="py-3 px-3">
+                        <div
+                          className={`relative w-11 h-11 bg-background border rounded overflow-hidden flex items-center justify-center ${getEnchantBorder(
+                            ti.item.enchantment
+                          )}`}
+                        >
+                          <img
+                            src={ti.item.icon}
+                            alt={ti.item.name}
+                            className="w-10 h-10 object-contain"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                          <div className="absolute top-0.5 left-0.5 px-1 py-0.2 bg-rose-900 text-white text-[9px] font-bold font-mono rounded-xs shadow">
+                            {ti.item.tierRoman}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Name & Quality */}
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-primary hover:underline font-semibold cursor-pointer">
+                            {ti.item.name}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-mono">
+                            ({ti.item.quality})
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Quantity input */}
+                      <td className="py-3 px-3 pr-4">
+                        <input
+                          type="number"
+                          value={ti.quantity}
+                          onChange={(e) =>
+                            handleUpdateQuantity(ti.instanceId, parseInt(e.target.value) || 0)
+                          }
+                          className="w-full max-w-[120px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
+                        />
+                      </td>
+
+                      {/* Buy Price input */}
+                      <td className="py-3 px-3 pr-4">
+                        <input
+                          type="number"
+                          value={ti.buyPrice}
+                          onChange={(e) =>
+                            handleUpdateBuyPrice(ti.instanceId, parseInt(e.target.value) || 0)
+                          }
+                          className="w-full max-w-[130px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
+                        />
+                        <div className="text-[10px] text-muted-foreground font-mono mt-1">
+                          {buyMethod === "order" ? `Order (+2.5%): +${m.buySetupFee.toLocaleString()}` : "Instant Buy (0% Fee)"}
+                        </div>
+                      </td>
+
+                      {/* Sell Price input */}
+                      <td className="py-3 px-3 pr-4">
+                        <input
+                          type="number"
+                          value={ti.sellPrice}
+                          onChange={(e) =>
+                            handleUpdateSellPrice(ti.instanceId, parseInt(e.target.value) || 0)
+                          }
+                          className="w-full max-w-[130px] bg-background border border-border text-foreground font-mono font-medium text-xs px-3 py-1.5 rounded-none focus:outline-none focus:border-primary"
+                        />
+                        <div className="text-[10px] text-muted-foreground font-mono mt-1">
+                          Taxes: -{m.totalSellDeductions.toLocaleString()} ({sellMethod === "order" ? "2.5% + " : ""}{hasPremium ? "4%" : "8%"})
+                        </div>
+                      </td>
+
+                      {/* Total Buy Cost (Capital) */}
+                      <td className="py-3 px-3 pr-4 text-right font-mono font-semibold text-foreground">
+                        {m.totalBuyCapital.toLocaleString()}
+                      </td>
+
+                      {/* Total Sell Return */}
+                      <td className="py-3 px-3 pr-4 text-right font-mono font-semibold text-foreground">
+                        {m.netSellReturn.toLocaleString()}
+                      </td>
+
+                      {/* Net Profit & ROI */}
+                      <td className="py-3 px-3 pr-4 text-right font-mono font-bold">
+                        <div
+                          className={
+                            m.netItemProfit >= 0
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-destructive"
+                          }
+                        >
+                          {m.netItemProfit > 0 ? "+" : ""}
+                          {m.netItemProfit.toLocaleString()}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground font-mono">
+                          ({m.itemRoi >= 0 ? "+" : ""}{m.itemRoi.toFixed(1)}%)
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* SECTION 2: Trade Manifest & Fee Breakdown Table */}
+      <div className="bg-card rounded-none border border-border p-4 lg:p-6 mb-8 shadow-xs">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Market Tax & Fee Breakdown (Buy Cost vs Sell Return)
+          </h2>
+          <span className="text-[11px] text-muted-foreground">
+            {tradeItems.length} {tradeItems.length === 1 ? "line" : "lines"} • Buy: {buyMethod === "order" ? "Buy Order (2.5% Setup)" : "Instant Buy (0% Fee)"} | Sell: {sellMethod === "order" ? "Sell Order (2.5% Setup)" : "Instant Sell"} + {hasPremium ? "4% Premium Tax" : "8% Standard Tax"}
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead className="bg-muted/30">
+              <tr className="border-b border-border text-muted-foreground text-[11px] font-semibold uppercase tracking-wider">
+                <th className="w-16 py-2.5 px-3 font-medium">Item</th>
+                <th className="py-2.5 px-3 font-medium">Name</th>
+                <th className="w-20 py-2.5 px-3 font-semibold text-foreground">
+                  Units
+                </th>
+                <th className="w-28 py-2.5 px-3 font-medium">Gross Buy</th>
+                <th className="w-28 py-2.5 px-3 font-medium">Buy Setup Fee</th>
+                <th className="w-32 py-2.5 px-3 font-semibold text-foreground">Total Buy Cost</th>
+                <th className="w-28 py-2.5 px-3 font-medium">Gross Sell</th>
+                <th className="w-36 py-2.5 px-3 font-medium">Sell Taxes & Setup</th>
+                <th className="w-32 py-2.5 px-3 font-semibold text-foreground">Total Sell Return</th>
+                <th className="w-28 py-2.5 px-3 font-medium text-right">Net Profit</th>
+                <th className="w-28 py-2.5 px-3 font-medium text-right pr-4">Profit / Loss %</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/60">
+              {tradeItems.length === 0 ? (
+                <tr>
+                  <td colSpan={11} className="py-8 text-center text-muted-foreground text-xs">
+                    No items in trade manifest.
+                  </td>
+                </tr>
+              ) : (
+                tradeItems.map((ti) => {
+                  const m = getItemMetrics(ti);
+
+                  return (
+                    <tr key={ti.instanceId} className="group hover:bg-muted/40 transition-colors">
+                      {/* Item Icon */}
+                      <td className="py-3 px-3">
+                        <div
+                          className={`relative w-11 h-11 bg-background border rounded overflow-hidden flex items-center justify-center ${getEnchantBorder(
+                            ti.item.enchantment
+                          )}`}
+                        >
+                          <img
+                            src={ti.item.icon}
+                            alt={ti.item.name}
+                            className="w-10 h-10 object-contain"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                          <div className="absolute top-0.5 left-0.5 px-1 py-0.2 bg-rose-900 text-white text-[9px] font-bold font-mono rounded-xs shadow">
+                            {ti.item.tierRoman}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Name */}
+                      <td className="py-3 px-3">
+                        <span className="text-primary hover:underline font-semibold cursor-pointer">
+                          {ti.item.name}
+                        </span>
+                      </td>
+
+                      {/* Units */}
+                      <td className="py-3 px-3">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded font-mono font-bold text-xs bg-muted text-foreground border border-border shadow-2xs tabular-nums">
+                          {ti.quantity.toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Gross Buy */}
+                      <td className="py-3 px-3 font-mono text-foreground">
+                        {m.grossBuy.toLocaleString()}
+                      </td>
+
+                      {/* Buy Setup Fee */}
+                      <td className="py-3 px-3 font-mono text-muted-foreground">
+                        {buyMethod === "order" ? `+${m.buySetupFee.toLocaleString()} (2.5%)` : "0 (0%)"}
+                      </td>
+
+                      {/* Total Buy Cost */}
+                      <td className="py-3 px-3 font-mono font-bold text-foreground">
+                        <span className="bg-muted/70 px-2 py-1 rounded border border-border inline-block">
+                          {m.totalBuyCapital.toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Gross Sell */}
+                      <td className="py-3 px-3 font-mono text-foreground">
+                        {m.grossSell.toLocaleString()}
+                      </td>
+
+                      {/* Sell Taxes & Setup */}
+                      <td className="py-3 px-3 font-mono text-muted-foreground">
+                        -{m.totalSellDeductions.toLocaleString()} ({sellMethod === "order" ? "2.5% + " : ""}{hasPremium ? "4%" : "8%"})
+                      </td>
+
+                      {/* Total Sell Return */}
+                      <td className="py-3 px-3 font-mono font-bold text-foreground">
+                        <span className="bg-muted/70 px-2 py-1 rounded border border-border inline-block">
+                          {m.netSellReturn.toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Net Profit */}
+                      <td className="py-3 px-3 pr-4 text-right font-mono font-bold">
+                        <span
+                          className={
+                            m.netItemProfit >= 0
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-destructive"
+                          }
+                        >
+                          {m.netItemProfit > 0 ? "+" : ""}
+                          {m.netItemProfit.toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Profit / Loss % */}
+                      <td className="py-3 px-3 pr-4 text-right font-mono font-bold">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded font-mono font-bold text-xs ${
+                            m.itemRoi >= 0
+                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                              : "bg-destructive/15 text-destructive border border-destructive/30"
+                          }`}
+                        >
+                          {m.itemRoi >= 0 ? "+" : ""}
+                          {m.itemRoi.toFixed(1)}%
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* BOTTOM TOTALS / TRADE PROFIT SUMMARY */}
+        <div className="mt-8 pt-6 border-t border-border flex flex-col items-end space-y-4 pr-2">
+          {/* Row 1: Capital (Total Buying Cost) */}
+          <div className="flex items-center justify-end gap-8 sm:gap-16">
+            <div className="text-right">
+              <span className="text-sm font-semibold text-foreground block">Capital (Total Buying Cost)</span>
+              <div className="text-[11px] text-muted-foreground mt-0.5">
+                Gross Buy: {summary.totalGrossBuy.toLocaleString()} Silver • Buy Setup Fee ({buyMethod === "order" ? "2.5%" : "0%"}): +{summary.totalBuySetupFees.toLocaleString()} Silver
+              </div>
             </div>
-
-            {/* Item Name */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-white/70">
-                Item Description (Optional)
-              </label>
-              <input
-                type="text"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-                placeholder="e.g. T6 Bloodletter, T8 Armor..."
-                className="w-full rounded-xl border border-white/15 bg-zinc-800 px-3.5 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-              />
-            </div>
-
-            {/* Item Quantity with Quick Quantity buttons right beside it */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-white/70">
-                  Item Quantity
-                </label>
-                <span className="text-[11px] text-blue-400 font-bold">
-                  {quantity.toLocaleString()} units
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-28 sm:w-32 rounded-xl border border-white/15 bg-zinc-800 px-3.5 py-2 text-sm font-bold text-white focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-                />
-
-                {/* Quick Quantity Buttons beside input */}
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {[1, 5, 10, 25, 50, 100, 999].map((amt) => (
-                    <button
-                      key={amt}
-                      type="button"
-                      onClick={() => setQuantity(amt)}
-                      className={`px-2.5 py-2 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        quantity === amt
-                          ? 'bg-blue-600 text-white border-blue-400 shadow-sm'
-                          : 'bg-zinc-800 border-white/10 hover:border-blue-400/40 text-white/70 hover:text-white'
-                      }`}
-                    >
-                      {amt === 999 ? '999 (Max)' : amt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 1. BUY ORDER / BUY PRICE */}
-            <div className="p-4 sm:p-5 rounded-2xl border border-blue-500/30 bg-zinc-800/60 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
-                    <span className="size-2 rounded-full bg-blue-400 animate-pulse" />
-                    Buy Price & Method
-                  </span>
-                  <span className="text-[11px] text-white/60">
-                    {buyMethod === 'order'
-                      ? 'Buy Order incurs 2.5% market setup fee upfront'
-                      : 'Instant Buy fills existing sell orders directly (0% fee)'}
-                  </span>
-                </div>
-
-                {/* Buy Method Toggle */}
-                <div className="flex bg-zinc-900 p-1 rounded-xl border border-white/15 text-xs self-start sm:self-auto">
-                  <button
-                    type="button"
-                    onClick={() => setBuyMethod('order')}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                      buyMethod === 'order'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    Buy Order (2.5%)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setBuyMethod('instant')}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                      buyMethod === 'instant'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    Instant Buy (0%)
-                  </button>
-                </div>
-              </div>
-
-              {/* Buy Price Input */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-white/70 flex justify-between">
-                  <span>Buy Price (Silver Per Item)</span>
-                  <SilverValue val={buyPrice} className="text-blue-400 font-bold" />
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 text-sm font-bold">
-                    Silver
-                  </div>
-                  <input
-                    type="number"
-                    min="0"
-                    step="100"
-                    value={buyPrice}
-                    onChange={(e) => setBuyPrice(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full rounded-xl border border-blue-500/40 bg-zinc-900 py-3 pl-18 pr-4 text-lg font-black text-white focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-                  />
-                </div>
-              </div>
-
-              {/* Buy Subtotal Breakdown */}
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-white/10 text-white/70">
-                <div>
-                  Base Buy ({quantity}x):{' '}
-                  <SilverValue val={totalBuyBase} className="font-bold text-white" />
-                </div>
-                <div className="text-right">
-                  Setup Fee ({buySetupRate * 100}%):{' '}
-                  <SilverValue val={buySetupFee} showSign suffix="" className="font-bold text-red-400" /> Silver
-                </div>
-              </div>
-            </div>
-
-            {/* 2. SELL ORDER / SELL PRICE */}
-            <div className="p-4 sm:p-5 rounded-2xl border border-white/15 bg-zinc-800/60 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5">
-                    <span className="size-2 rounded-full bg-white animate-pulse" />
-                    Target Sell Price & Method
-                  </span>
-                  <span className="text-[11px] text-white/60">
-                    {sellMethod === 'order'
-                      ? 'Sell Order charges 2.5% market setup fee + sales tax'
-                      : 'Instant Sell fills existing buy orders (0% setup fee)'}
-                  </span>
-                </div>
-
-                {/* Sell Method Toggle */}
-                <div className="flex bg-zinc-900 p-1 rounded-xl border border-white/15 text-xs self-start sm:self-auto">
-                  <button
-                    type="button"
-                    onClick={() => setSellMethod('order')}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                      sellMethod === 'order'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    Sell Order (2.5%)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSellMethod('instant')}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                      sellMethod === 'instant'
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    Instant Sell (0%)
-                  </button>
-                </div>
-              </div>
-
-              {/* Sell Price Input */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-white/70 flex justify-between">
-                  <span>Target Sell Price (Silver Per Item)</span>
-                  <SilverValue val={sellPrice} className="text-white font-bold" />
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 text-sm font-bold">
-                    Silver
-                  </div>
-                  <input
-                    type="number"
-                    min="0"
-                    step="100"
-                    value={sellPrice}
-                    onChange={(e) => setSellPrice(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full rounded-xl border border-white/20 bg-zinc-900 py-3 pl-18 pr-4 text-lg font-black text-white focus:border-white/50 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                </div>
-              </div>
-
-              {/* Sell Subtotal Breakdown */}
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-white/10 text-white/70">
-                <div>
-                  Gross Revenue ({quantity}x):{' '}
-                  <SilverValue val={totalGrossRevenue} className="font-bold text-white" />
-                </div>
-                <div className="text-right">
-                  Sales Tax ({salesTaxRate * 100}%):{' '}
-                  <SilverValue val={-marketTaxFee} suffix="" className="font-bold text-red-400" /> Silver
-                </div>
-              </div>
-            </div>
-
-            {/* 3. EXTRA SYSTEM EXPENSES */}
-            <div className="rounded-xl border border-white/10 bg-zinc-800/40 p-4 space-y-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-white/70 flex items-center gap-1.5">
-                  <IconAdjustmentsHorizontal className="size-4 text-blue-400" />
-                  Additional System Fees & Costs
-                </span>
-                <span className="text-[11px] text-white/50">Relist & Transport</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Relist Adjustments */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-white/70 flex items-center gap-1">
-                    <IconRotate className="size-3.5 text-blue-400" />
-                    Market Relist / Edits (2.5% each)
-                  </label>
-                  <select
-                    value={relistCount}
-                    onChange={(e) => setRelistCount(parseInt(e.target.value) || 0)}
-                    className="w-full rounded-xl border border-white/15 bg-zinc-800 px-3.5 py-2 text-sm text-white focus:border-blue-400 focus:outline-none cursor-pointer"
-                  >
-                    <option value={0}>0 - No price adjustments (0%)</option>
-                    <option value={1}>1 relist adjustment (+2.5%)</option>
-                    <option value={2}>2 relist adjustments (+5.0%)</option>
-                    <option value={3}>3 relist adjustments (+7.5%)</option>
-                  </select>
-                </div>
-
-                {/* Transport / Hauling Fee */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-white/70 flex items-center gap-1">
-                    <IconTruck className="size-3.5 text-blue-400" />
-                    Transport / Carriage Cost (Silver)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1000"
-                    value={transportCost}
-                    onChange={(e) => setTransportCost(Math.max(0, parseInt(e.target.value) || 0))}
-                    placeholder="0"
-                    className="w-full rounded-xl border border-white/15 bg-zinc-800 px-3.5 py-2 text-sm text-white focus:border-blue-400 focus:outline-none"
-                  />
-                </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-muted/80 border border-border rounded font-mono font-bold text-lg sm:text-xl text-foreground shadow-2xs">
+                <IconCoins size={18} className="text-amber-400 shrink-0" />
+                <span>{summary.totalCapital.toLocaleString()} Silver</span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Column: OUTPUT - PROFIT PRICE (SILVER) */}
-        <div className="lg:col-span-5 space-y-5">
-          {/* Main Profit Outcome Card (Flat Zinc/Slate, White, Red, Blue - No Gradient) */}
-          <div
-            className={`rounded-2xl border-2 p-6 bg-zinc-900 shadow-xl relative transition-all ${
-              netProfit >= 0 ? 'border-blue-500' : 'border-red-500'
-            }`}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-black uppercase tracking-widest text-white flex items-center gap-1.5">
-                <IconCoin className="size-4.5 text-blue-400" />
-                OUTPUT: PROFIT (SILVER)
+          {/* Row 2: Total Selling Cost / Return */}
+          <div className="flex items-center justify-end gap-8 sm:gap-16">
+            <div className="text-right">
+              <span className="text-sm font-semibold text-foreground block">Total Selling Return (After Tax)</span>
+              <div className="text-[11px] text-muted-foreground mt-0.5">
+                Gross Sell: {summary.totalGrossSell.toLocaleString()} Silver • Market Taxes & Fees: -{summary.totalSellDeductions.toLocaleString()} Silver ({sellMethod === "order" ? "2.5% Setup + " : ""}{hasPremium ? "4%" : "8%"} Tax)
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-muted/80 border border-border rounded font-mono font-bold text-lg sm:text-xl text-foreground shadow-2xs">
+                <IconCoins size={18} className="text-amber-400 shrink-0" />
+                <span>{summary.totalNetSellReturn.toLocaleString()} Silver</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Profit with percentage (Profit / Loss) */}
+          <div className="flex items-center justify-end gap-8 sm:gap-16">
+            <div className="text-right">
+              <span className="text-sm font-semibold text-foreground block">
+                {summary.totalNetProfit >= 0 ? "Net Profit" : "Net Loss"}
               </span>
-
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-black flex items-center gap-1.5 border ${
-                  netProfit > 0
-                    ? 'bg-blue-600 text-white border-blue-400'
-                    : netProfit === 0
-                    ? 'bg-zinc-800 text-white border-white/40'
-                    : 'bg-red-600 text-white border-red-400'
+              <div className="text-[11px] text-muted-foreground mt-0.5 flex items-center justify-end gap-2">
+                <span>Profit / Loss Percentage:</span>
+                <span
+                  className={`px-1.5 py-0.5 rounded font-mono font-bold text-[11px] ${
+                    summary.overallRoi >= 0
+                      ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                      : "bg-destructive/15 text-destructive border border-destructive/30"
+                  }`}
+                >
+                  {summary.overallRoi >= 0 ? "+" : ""}
+                  {summary.overallRoi.toFixed(1)}% {summary.totalNetProfit >= 0 ? "PROFIT" : "LOSS"}
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div
+                className={`inline-flex items-center gap-2 px-3.5 py-1.5 border rounded font-mono font-bold text-lg sm:text-xl shadow-2xs ${
+                  summary.totalNetProfit >= 0
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                    : "bg-destructive/10 text-destructive border-destructive/30"
                 }`}
               >
-                {netProfit >= 0 ? <IconCheck className="size-3.5 stroke-[3]" /> : <IconAlertTriangle className="size-3.5 stroke-[3]" />}
-                {netProfit > 0 ? 'Profitable Trade' : netProfit === 0 ? 'Break-Even' : 'Loss Warning'}
-              </span>
-            </div>
-
-            {/* Total Net Profit Silver Hero */}
-            <div className="mb-5">
-              <p className="text-xs font-bold text-white/70 uppercase tracking-wider">
-                Total Net Profit ({quantity.toLocaleString()} units)
-              </p>
-              <div className="mt-1.5">
-                <SilverValue
-                  val={netProfit}
-                  showSign={true}
-                  suffix="Silver"
-                  className={`text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                    netProfit > 0 ? 'text-blue-400' : netProfit === 0 ? 'text-white' : 'text-red-500'
-                  }`}
-                />
-              </div>
-              <p className="text-[11px] text-white/50 mt-1">
-                (Hover over values to reveal exact full numbers)
-              </p>
-            </div>
-
-            {/* ROI & Margin Badges (Flat with Blue / Red accents) */}
-            <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/15">
-              <div className="p-3.5 rounded-xl bg-zinc-800/80 border border-white/15">
-                <div className="flex items-center gap-1 text-[11px] font-bold text-white/70 uppercase">
-                  <IconPercentage className="size-3.5 text-blue-400" /> Return on Investment
-                </div>
-                <div
-                  className={`text-xl font-black mt-1 ${
-                    roi >= 0 ? 'text-blue-400' : 'text-red-500'
-                  }`}
-                >
-                  {roi > 0 ? '+' : ''}
-                  {roi.toFixed(2)}%
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-zinc-800/80 border border-white/15">
-                <div className="flex items-center gap-1 text-[11px] font-bold text-white/70 uppercase">
-                  <IconTrendingUp className="size-3.5 text-blue-400" /> Profit Margin
-                </div>
-                <div
-                  className={`text-xl font-black mt-1 ${
-                    margin >= 0 ? 'text-blue-400' : 'text-red-500'
-                  }`}
-                >
-                  {margin > 0 ? '+' : ''}
-                  {margin.toFixed(2)}%
-                </div>
-              </div>
-            </div>
-
-            {/* Net Profit Per Item */}
-            <div className="mt-3.5 p-3.5 rounded-xl bg-zinc-800/80 border border-white/15 flex justify-between items-center text-xs">
-              <span className="font-bold text-white/70 uppercase">Net Profit Per Item:</span>
-              <SilverValue
-                val={profitPerItem}
-                showSign={true}
-                className={`text-sm font-black ${
-                  profitPerItem > 0 ? 'text-blue-400' : profitPerItem === 0 ? 'text-white' : 'text-red-500'
-                }`}
-              />
-            </div>
-
-            {/* Break-Even Target Sell Price */}
-            <div className="mt-3.5 p-3.5 rounded-xl bg-zinc-800/80 border border-blue-500/60 flex justify-between items-center text-xs">
-              <span className="text-white font-bold flex items-center gap-1.5 uppercase">
-                <IconSparkles className="size-4 text-blue-400" />
-                Break-even Sell Price:
-              </span>
-              <SilverValue
-                val={breakEvenSellPrice}
-                className="text-sm font-black text-blue-400"
-              />
-            </div>
-          </div>
-
-          {/* Itemized Financial Ledger Breakdown (Flat Zinc & White with Red/Blue) */}
-          <div className="rounded-2xl border border-white/15 bg-zinc-900 p-5 space-y-3.5 text-xs shadow-md">
-            <div className="flex items-center justify-between pb-2.5 border-b border-white/15">
-              <h3 className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5">
-                <IconReceipt2 className="size-4 text-blue-400" />
-                Financial Breakdown Ledger
-              </h3>
-              <span className="text-[11px] text-blue-400 font-bold">Albion Silver</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between py-0.5 text-white/70">
-                <span>Base Buy Cost ({quantity} × {formatSilver(buyPrice)})</span>
-                <SilverValue val={totalBuyBase} className="text-white font-bold" />
-              </div>
-
-              {buySetupFee > 0 && (
-                <div className="flex justify-between py-0.5 text-white/70">
-                  <span>Buy Order Setup Fee ({buySetupRate * 100}%)</span>
-                  <SilverValue val={-buySetupFee} className="text-red-500 font-bold" />
-                </div>
-              )}
-
-              {transportCost > 0 && (
-                <div className="flex justify-between py-0.5 text-white/70">
-                  <span>Transport / Carriage Cost</span>
-                  <SilverValue val={-transportCost} className="text-red-500 font-bold" />
-                </div>
-              )}
-
-              <div className="flex justify-between py-1.5 border-t border-white/10 font-bold text-white">
-                <span>Total Capital Invested</span>
-                <SilverValue val={totalCost} className="text-blue-400" />
-              </div>
-
-              <div className="flex justify-between py-0.5 text-white/70 pt-1">
-                <span>Gross Sales ({quantity} × {formatSilver(sellPrice)})</span>
-                <SilverValue val={totalGrossRevenue} className="text-white font-bold" />
-              </div>
-
-              {sellSetupFee > 0 && (
-                <div className="flex justify-between py-0.5 text-white/70">
-                  <span>Sell Order Setup Fee ({sellSetupRate * 100}%)</span>
-                  <SilverValue val={-sellSetupFee} className="text-red-500 font-bold" />
-                </div>
-              )}
-
-              <div className="flex justify-between py-0.5 text-white/70">
-                <span>Market Sales Tax ({hasPremium ? '4% Premium' : '8% Free'})</span>
-                <SilverValue val={-marketTaxFee} className="text-red-500 font-bold" />
-              </div>
-
-              {relistFee > 0 && (
-                <div className="flex justify-between py-0.5 text-white/70">
-                  <span>Order Relist Adjustment ({relistCount}x)</span>
-                  <SilverValue val={-relistFee} className="text-red-500 font-bold" />
-                </div>
-              )}
-
-              <div className="flex justify-between py-1.5 text-white border-t border-white/10 font-bold">
-                <span>Total Taxes & Deductions</span>
-                <SilverValue val={-totalFees} className="text-red-500" />
-              </div>
-
-              <div className="pt-2.5 border-t-2 border-white/20 flex justify-between font-black text-sm">
-                <span className="text-white">Net Payout Profit</span>
-                <SilverValue
-                  val={netProfit}
-                  showSign={true}
-                  className={netProfit >= 0 ? 'text-blue-400 font-black' : 'text-red-500 font-black'}
-                />
+                <IconTrendingUp size={18} />
+                <span>
+                  {summary.totalNetProfit > 0 ? "+" : ""}
+                  {summary.totalNetProfit.toLocaleString()} Silver
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* GLOBAL MARKETPLACE ITEM SELECT MODAL */}
+      {/* ========================================================================= */}
+      <AlbionItemSelectModal
+        isOpen={isAddItemOpen}
+        onClose={() => setIsAddItemOpen(false)}
+        onSelectItem={handleAddItem}
+        title="Marketplace"
+        actionLabel="Select"
+      />
     </div>
   );
 }

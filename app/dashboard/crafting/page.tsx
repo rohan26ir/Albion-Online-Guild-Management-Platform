@@ -2,6 +2,6 @@
 
 import { CraftCalculator } from "@/components/albion/crafting/CraftCalculator";
 
-export default function CraftingCalculatorPage() {
+export default function CraftingPage() {
   return <CraftCalculator />;
 }

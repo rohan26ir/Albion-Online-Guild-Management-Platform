@@ -315,6 +315,39 @@ const groups: NavGroup[] = [
     ],
   },
   {
+    title: "Island",
+    pages: [
+      {
+        title: "Personal",
+        href: "/dashboard/island/personal",
+        icon: <IconUser size={18} />,
+        children: [
+          { title: "Upgrade Cost", href: "/dashboard/island/personal/upgrade", icon: <IconCoin size={16} /> },
+          { title: "Map", href: "/dashboard/island/personal/map", icon: <IconCompass size={16} /> },
+          { title: "Build", href: "/dashboard/island/personal/build", icon: <IconHammer size={16} /> },
+          { title: "Farm & Laborers", href: "/dashboard/island/personal/farm", icon: <IconPlant size={16} /> },
+          { title: "Obtain Island", href: "/dashboard/island/personal/obtain", icon: <IconBuildingStore size={16} /> },
+          { title: "Buildings Size", href: "/dashboard/island/personal/buildings", icon: <IconLayoutDashboard size={16} /> },
+          { title: "Others", href: "/dashboard/island/personal/others", icon: <IconFileDescription size={16} /> },
+        ]
+      },
+      {
+        title: "Guild",
+        href: "/dashboard/island/guild",
+        icon: <IconUsersGroup size={18} />,
+        children: [
+          { title: "Upgrade Cost", href: "/dashboard/island/guild/upgrade", icon: <IconCoin size={16} /> },
+          { title: "Map", href: "/dashboard/island/guild/map", icon: <IconCompass size={16} /> },
+          { title: "Build", href: "/dashboard/island/guild/build", icon: <IconHammer size={16} /> },
+          { title: "Laborers", href: "/dashboard/island/guild/farm", icon: <IconUsers size={16} /> },
+          { title: "Obtain Island", href: "/dashboard/island/guild/obtain", icon: <IconBuildingStore size={16} /> },
+          { title: "Buildings Size", href: "/dashboard/island/guild/buildings", icon: <IconLayoutDashboard size={16} /> },
+          { title: "Others", href: "/dashboard/island/guild/others", icon: <IconFileDescription size={16} /> },
+        ]
+      },
+    ],
+  },
+  {
     title: "Maps",
     pages: [
       {
@@ -323,94 +356,134 @@ const groups: NavGroup[] = [
         icon: <IconMap size={18} />,
         children: [
           { title: "World Map", href: "/dashboard/maps", icon: <IconMap size={16} /> },
-          { title: "Zone Directory", href: "/dashboard/maps/zones", icon: <IconCompass size={16} /> },
-          { title: "Resource Hotspots", href: "/dashboard/maps/resources", icon: <IconCompass size={16} /> },
-          { title: "Avalonian Roads", href: "/dashboard/maps/roads", icon: <IconCompass size={16} /> },
+          { title: "Royal Continent", href: "/dashboard/maps/royal", icon: <IconCompass size={16} /> },
+          { title: "Outlands (Black Zone)", href: "/dashboard/maps/outlands", icon: <IconSwords size={16} /> },
+          { title: "Avalonian Roads", href: "/dashboard/maps/avalon", icon: <IconFlame size={16} /> },
+          { title: "Mists & Brecilien", href: "/dashboard/maps/mists", icon: <IconPlant size={16} /> },
         ],
       },
     ],
   },
   {
-    title: "Guild",
+    title: "Database",
     pages: [
       {
-        title: "Top 100 Guilds",
-        href: "/dashboard/guild/top-100",
-        icon: <IconTrophy size={18} />,
-      },
-      {
-        title: "Members",
-        href: "/dashboard/members",
-        icon: <IconUsers size={18} />,
-        children: [
-          { title: "Generate Share Form", href: "/dashboard/applications/public-url", icon: <IconLink size={16} /> },
-          { title: "All Applications", href: "/dashboard/applications", icon: <IconFileDescription size={16} /> },
-          { title: "Pending Review", href: "/dashboard/applications?status=pending", icon: <IconClock size={16} /> },
-          { title: "All Members List", href: "/dashboard/members", icon: <IconUsers size={16} /> },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Calculation",
-    pages: [
-      {
-        title: "Calculators",
-        href: "/dashboard/calculators",
-        icon: <IconCalculator size={18} />,
-        children: [
-          { title: "All Calculators", href: "/dashboard/calculators", icon: <IconCalculator size={16} /> },
-          { title: "Buy / Sell Profit", href: "/dashboard/calculators/trade-profit", icon: <IconArrowsExchange size={16} /> },
-          { title: "Crafting Profit", href: "/dashboard/calculators/crafting", icon: <IconHammer size={16} /> },
-          { title: "Refining Profit", href: "/dashboard/calculators/refining", icon: <IconScissors size={16} /> },
-          { title: "Fame & Spec", href: "/dashboard/calculators/fame", icon: <IconFlame size={16} /> },
-          { title: "Tax & Profit", href: "/dashboard/calculators/tax", icon: <IconCoin size={16} /> },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Others (Player Tools)",
-    pages: [
-      {
-        title: "Builds",
-        href: "/dashboard/builds",
+        title: "Item Database",
+        href: "/dashboard/items",
         icon: <IconSword size={18} />,
         children: [
-          { title: "All Builds", href: "/dashboard/builds", icon: <IconSword size={16} /> },
-          { title: "PvP", href: "/dashboard/builds", icon: <IconSwords size={16} /> },
-          { title: "PvE", href: "/dashboard/builds", icon: <IconAxe size={16} /> },
-          { title: "Gathering", href: "/dashboard/builds", icon: <IconBackpack size={16} /> },
-          { title: "Crafting", href: "/dashboard/builds", icon: <IconHammer size={16} /> },
+          { title: "All Items", href: "/dashboard/items", icon: <IconSword size={16} /> },
+          { title: "Weapons", href: "/dashboard/items/weapons", icon: <IconSwords size={16} /> },
+          { title: "Armor & Equipment", href: "/dashboard/items/armor", icon: <IconShield size={16} /> },
+          { title: "Consumables", href: "/dashboard/items/consumables", icon: <IconFlame size={16} /> },
+          { title: "Mounts", href: "/dashboard/items/mounts", icon: <IconPlant size={16} /> },
+          { title: "Materials", href: "/dashboard/items/materials", icon: <IconHammer size={16} /> },
         ],
       },
       {
-        title: "Guides",
-        href: "/dashboard/guides",
-        icon: <IconBook size={18} />,
+        title: "Destiny Board",
+        href: "/dashboard/destiny-board",
+        icon: <IconCompass size={18} />,
         children: [
-          { title: "All Guides", href: "/dashboard/guides", icon: <IconBook size={16} /> },
-          { title: "Tutorials", href: "/dashboard/guides/tutorials", icon: <IconMap size={16} /> },
-          { title: "Strategy", href: "/dashboard/guides/strategy", icon: <IconSwords size={16} /> },
+          { title: "Combat Tree", href: "/dashboard/destiny-board/combat", icon: <IconSwords size={16} /> },
+          { title: "Crafting Tree", href: "/dashboard/destiny-board/crafting", icon: <IconHammer size={16} /> },
+          { title: "Gathering Tree", href: "/dashboard/destiny-board/gathering", icon: <IconBackpack size={16} /> },
+          { title: "Farming Tree", href: "/dashboard/destiny-board/farming", icon: <IconPlant size={16} /> },
         ],
       },
       {
-        title: "News",
-        href: "/dashboard/news",
-        icon: <IconNews size={18} />,
+        title: "Spell & Ability Library",
+        href: "/dashboard/spells",
+        icon: <IconFlame size={18} />,
+        children: [
+          { title: "Q-Slot Abilities", href: "/dashboard/spells/q-slots", icon: <IconSwords size={16} /> },
+          { title: "W-Slot Abilities", href: "/dashboard/spells/w-slots", icon: <IconShield size={16} /> },
+          { title: "E-Slot Ultimates", href: "/dashboard/spells/e-slots", icon: <IconFlame size={16} /> },
+          { title: "Passive Abilities", href: "/dashboard/spells/passives", icon: <IconPointFilled size={16} /> },
+        ],
       },
       {
-        title: "Settings",
-        href: "/dashboard/settings",
-        icon: <IconSettings size={18} />,
+        title: "Monsters & Bosses",
+        href: "/dashboard/mobs",
+        icon: <IconFlame size={18} />,
+        children: [
+          { title: "Open World Mobs", href: "/dashboard/mobs/open-world", icon: <IconMap size={16} /> },
+          { title: "Dungeon Bosses", href: "/dashboard/mobs/dungeons", icon: <IconShield size={16} /> },
+          { title: "World Bosses", href: "/dashboard/mobs/world-bosses", icon: <IconTrophy size={16} /> },
+          { title: "Avalonian Drones & Mobs", href: "/dashboard/mobs/avalonian", icon: <IconSwords size={16} /> },
+        ],
       },
     ],
   },
   {
-    title: "Admin Portal",
+    title: "Guild & Alliance",
     pages: [
       {
-        title: "Admin Panel",
+        title: "Guild Hub",
+        href: "/dashboard/guild",
+        icon: <IconUsersGroup size={18} />,
+        children: [
+          { title: "Overview", href: "/dashboard/guild", icon: <IconLayoutDashboard size={16} /> },
+          { title: "Roster & Roles", href: "/dashboard/guild/roster", icon: <IconUsers size={16} /> },
+          { title: "Recruitment", href: "/dashboard/guild/recruitment", icon: <IconUserCheck size={16} /> },
+          { title: "Territories & Hideouts", href: "/dashboard/guild/territories", icon: <IconShield size={16} /> },
+          { title: "Season Points & Rank", href: "/dashboard/guild/season", icon: <IconTrophy size={16} /> },
+          { title: "Guild Island", href: "/dashboard/guild/island", icon: <IconBuildingStore size={16} /> },
+          { title: "Guild Bank Logs", href: "/dashboard/guild/bank-logs", icon: <IconCoin size={16} /> },
+          { title: "Tax & Contributions", href: "/dashboard/guild/taxes", icon: <IconChartLine size={16} /> },
+          { title: "Killboard Tracker", href: "/dashboard/guild/killboard", icon: <IconSwords size={16} /> },
+          { title: "Re-gear Requests (CTA)", href: "/dashboard/guild/regear", icon: <IconBackpack size={16} /> },
+          { title: "Loot Split Calculator", href: "/dashboard/guild/loot-split", icon: <IconCalculator size={16} /> },
+          { title: "GvG & ZvZ Attendance", href: "/dashboard/guild/attendance", icon: <IconCalendarEvent size={16} /> },
+          { title: "Alliance Hub", href: "/dashboard/guild/alliance", icon: <IconUsersGroup size={16} /> },
+          { title: "Guild Announcements", href: "/dashboard/guild/announcements", icon: <IconNews size={16} /> },
+        ],
+      },
+    ],
+  },
+  {
+    title: "PVP & Battle Hub",
+    pages: [
+      {
+        title: "Battle & Killboards",
+        href: "/dashboard/battles",
+        icon: <IconSwords size={18} />,
+        children: [
+          { title: "Recent Battles", href: "/dashboard/battles", icon: <IconSwords size={16} /> },
+          { title: "Top Killers", href: "/dashboard/battles/top-killers", icon: <IconTrophy size={16} /> },
+          { title: "ZvZ Battle Reports", href: "/dashboard/battles/zvz", icon: <IconReportAnalytics size={16} /> },
+          { title: "Gank Tracker", href: "/dashboard/battles/gank-tracker", icon: <IconAlertTriangle size={16} /> },
+          { title: "Hellgate Leaderboards", href: "/dashboard/battles/hellgates", icon: <IconFlame size={16} /> },
+          { title: "Corrupted Dungeons", href: "/dashboard/battles/corrupted", icon: <IconShield size={16} /> },
+          { title: "Crystal Arena Rankings", href: "/dashboard/battles/crystal-arena", icon: <IconTrophy size={16} /> },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Community & Content",
+    pages: [
+      {
+        title: "Community Hub",
+        href: "/dashboard/community",
+        icon: <IconBook size={18} />,
+        children: [
+          { title: "Build Creator", href: "/dashboard/builds/create", icon: <IconPlus size={16} /> },
+          { title: "Guides & Tutorials", href: "/dashboard/guides", icon: <IconBook size={16} /> },
+          { title: "Meta Builds Tier List", href: "/dashboard/tier-lists", icon: <IconTrophy size={16} /> },
+          { title: "Patch Notes & Updates", href: "/dashboard/patch-notes", icon: <IconNews size={16} /> },
+          { title: "Official News & Dev Blogs", href: "/dashboard/news", icon: <IconNews size={16} /> },
+          { title: "Events & Tournaments", href: "/dashboard/events", icon: <IconCalendarEvent size={16} /> },
+          { title: "Streamers & Content Creators", href: "/dashboard/creators", icon: <IconUsers size={16} /> },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Administration",
+    pages: [
+      {
+        title: "Platform Admin",
         href: "/dashboard/admin",
         icon: <IconShield size={18} />,
         children: [
@@ -513,42 +586,31 @@ export function AppSidebar() {
                   const active = isActive(page.href);
                   const hasChildren = !!page.children?.length;
 
-                  return (
-                    <Collapsible key={page.href} defaultOpen={active} className="group/collapsible">
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          asChild={!hasChildren}
-                          isActive={active}
-                          tooltip={page.title}
-                          onClick={hasChildren ? undefined : handleNavigation}
-                        >
-                          {hasChildren ? (
-                            <CollapsibleTrigger className="flex w-full items-center gap-2 ">
-                              {page.icon}
-                              <span>{page.title}</span>
-                              {page.badge !== undefined && (
-                                <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
-                                  {page.badge}
-                                </span>
-                              )}
-                              <div className="ml-auto">
+                  if (hasChildren) {
+                    return (
+                      <Collapsible key={page.title} defaultOpen={active} className="group/collapsible">
+                        <SidebarMenuItem>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton
+                              isActive={active}
+                              tooltip={page.title}
+                              className="w-full justify-between"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                {page.icon}
+                                <span className="truncate">{page.title}</span>
+                              </div>
+                              <div className="flex items-center gap-1 shrink-0">
+                                {page.badge !== undefined && (
+                                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+                                    {page.badge}
+                                  </span>
+                                )}
                                 <IconChevronDown className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
                               </div>
-                            </CollapsibleTrigger>
-                          ) : (
-                            <Link href={page.href} onClick={handleNavigation}>
-                              {page.icon}
-                              <span>{page.title}</span>
-                              {page.badge !== undefined && (
-                                <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
-                                  {page.badge}
-                                </span>
-                              )}
-                            </Link>
-                          )}
-                        </SidebarMenuButton>
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
 
-                        {hasChildren && (
                           <CollapsibleContent>
                             <SidebarMenuSub>
                               {page.children!.map((child) => {
@@ -571,9 +633,29 @@ export function AppSidebar() {
                               })}
                             </SidebarMenuSub>
                           </CollapsibleContent>
-                        )}
-                      </SidebarMenuItem>
-                    </Collapsible>
+                        </SidebarMenuItem>
+                      </Collapsible>
+                    );
+                  }
+
+                  return (
+                    <SidebarMenuItem key={page.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        tooltip={page.title}
+                      >
+                        <Link href={page.href} onClick={handleNavigation}>
+                          {page.icon}
+                          <span>{page.title}</span>
+                          {page.badge !== undefined && (
+                            <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+                              {page.badge}
+                            </span>
+                          )}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   );
                 })}
               </SidebarMenu>

@@ -207,7 +207,7 @@ function LoginForm() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="player@albion.com"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                     />
                   </div>
@@ -229,7 +229,7 @@ function LoginForm() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                     />
                     <button
@@ -249,13 +249,13 @@ function LoginForm() {
                     <input
                       type="checkbox"
                       defaultChecked
-                      className="rounded border-white/20 bg-white/10 text-primary focus:ring-primary"
+                      className="rounded border-white/20 bg-white/10 text-amber-500 focus:ring-amber-500"
                     />
                     <span className="text-xs">Remember me</span>
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-xs text-primary hover:text-primary/80 transition-colors"
+                    className="text-xs text-amber-400 hover:text-amber-300 font-medium transition-colors"
                   >
                     Forgot Password?
                   </Link>
@@ -265,7 +265,7 @@ function LoginForm() {
                 <Button
                   type="submit"
                   disabled={isLoading || oauthLoading !== null}
-                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 mt-2 transition-all shadow-lg shadow-primary/20"
+                  className="w-full gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-2.5 mt-2 transition-all shadow-lg shadow-amber-600/30"
                 >
                   {isLoading ? (
                     <>
@@ -285,7 +285,7 @@ function LoginForm() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-white/60">
                   {"Don't have an account?"}{" "}
-                  <Link href="/register" className="font-semibold text-primary hover:text-primary/80 transition-colors">
+                  <Link href="/register" className="font-semibold text-amber-400 hover:text-amber-300 transition-colors">
                     Create Account
                   </Link>
                 </p>

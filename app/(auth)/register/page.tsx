@@ -263,7 +263,7 @@ function RegisterForm() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                     />
                   </div>
@@ -285,7 +285,7 @@ function RegisterForm() {
                       value={formData.username}
                       onChange={handleChange}
                       placeholder="johndoe"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                     />
                   </div>
@@ -307,7 +307,7 @@ function RegisterForm() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="player@albion.com"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                     />
                   </div>
@@ -329,7 +329,7 @@ function RegisterForm() {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Create a password (min 6 characters)"
-                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
                       required
                       minLength={6}
                     />
@@ -348,7 +348,7 @@ function RegisterForm() {
                 <Button
                   type="submit"
                   disabled={isLoading || oauthLoading !== null}
-                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2.5 mt-2 transition-all shadow-lg shadow-primary/20"
+                  className="w-full gap-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-2.5 mt-2 transition-all shadow-lg shadow-amber-600/30"
                 >
                   {isLoading ? (
                     <>
@@ -368,7 +368,7 @@ function RegisterForm() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-white/60">
                   Already have an account?{" "}
-                  <Link href="/login" className="font-semibold text-primary hover:text-primary/80 transition-colors">
+                  <Link href="/login" className="font-semibold text-amber-400 hover:text-amber-300 transition-colors">
                     Sign In
                   </Link>
                 </p>

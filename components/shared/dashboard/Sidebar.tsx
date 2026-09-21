@@ -250,11 +250,6 @@ const groups: NavGroup[] = [
         title: "Analysis",
         href: "/dashboard/analysis",
         icon: <IconReportAnalytics size={18} />,
-        children: [
-          { title: "Performance Analysis", href: "/dashboard/analysis", icon: <IconChartLine size={16} /> },
-          { title: "Market Trends", href: "/dashboard/marketplace/prices", icon: <IconBuildingStore size={16} /> },
-          { title: "Guild Statistics", href: "/dashboard/guild/stats", icon: <IconUsersGroup size={16} /> },
-        ],
       },
     ],
   },
@@ -262,25 +257,23 @@ const groups: NavGroup[] = [
     title: "Market Price",
     pages: [
       {
-        title: "Market Overview",
-        href: "/dashboard/marketplace",
+        title: "Citybase marketplace",
+        href: "/dashboard/marketplace/citybase",
         icon: <IconBuildingStore size={18} />,
         children: [
-          { title: "Marketplace", href: "/dashboard/marketplace", icon: <IconBuildingStore size={16} /> },
-          { title: "Item Listings", href: "/dashboard/marketplace/listings", icon: <IconTag size={16} /> },
-          { title: "Price History", href: "/dashboard/marketplace/prices", icon: <IconChartLine size={16} /> },
-          { title: "My Trades", href: "/dashboard/marketplace/trades", icon: <IconArrowsExchange size={16} /> },
+          { title: "Thetford", href: "/dashboard/marketplace/citybase/thetford", icon: <IconBuildingStore size={16} /> },
+          { title: "Fort Sterling", href: "/dashboard/marketplace/citybase/fort-sterling", icon: <IconBuildingStore size={16} /> },
+          { title: "Lymhurst", href: "/dashboard/marketplace/citybase/lymhurst", icon: <IconBuildingStore size={16} /> },
+          { title: "Bridgewatch", href: "/dashboard/marketplace/citybase/bridgewatch", icon: <IconBuildingStore size={16} /> },
+          { title: "Martlock", href: "/dashboard/marketplace/citybase/martlock", icon: <IconBuildingStore size={16} /> },
+          { title: "Caerleon", href: "/dashboard/marketplace/citybase/caerleon", icon: <IconBuildingStore size={16} /> },
+          { title: "Brecilien", href: "/dashboard/marketplace/citybase/brecilien", icon: <IconBuildingStore size={16} /> },
         ],
       },
       {
-        title: "Auctions",
+        title: "Buy & Sell",
         href: "/dashboard/auction",
         icon: <IconCoin size={18} />,
-        children: [
-          { title: "Active Auctions", href: "/dashboard/auction", icon: <IconCoin size={16} /> },
-          { title: "Create Auction", href: "/dashboard/auction/create", icon: <IconTag size={16} /> },
-          { title: "Manage Auctions", href: "/dashboard/auction/manage-auction", icon: <IconArrowsExchange size={16} /> },
-        ],
       },
     ],
   },
@@ -299,21 +292,7 @@ const groups: NavGroup[] = [
       },
     ],
   },
-  {
-    title: "Farming",
-    pages: [
-      {
-        title: "Farming & Island",
-        href: "/dashboard/farming",
-        icon: <IconPlant size={18} />,
-        children: [
-          { title: "Crops & Herbs", href: "/dashboard/farming", icon: <IconCarrot size={16} /> },
-          { title: "Livestock & Pastures", href: "/dashboard/farming/livestock", icon: <IconAxe size={16} /> },
-          { title: "Island Planner", href: "/dashboard/farming/layout", icon: <IconLayoutDashboard size={16} /> },
-        ],
-      },
-    ],
-  },
+
   {
     title: "Island",
     pages: [
@@ -575,8 +554,12 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {groups.map((group) => (
-          <SidebarGroup key={group.title}>
+        {groups.map((group) => {
+          if (group.title === "Administration" && currentUser.email !== "rohan26ir@gmail.com") {
+            return null;
+          }
+          return (
+            <SidebarGroup key={group.title}>
             <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               {group.title}
             </SidebarGroupLabel>
@@ -661,7 +644,8 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-        ))}
+          );
+        })}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border">

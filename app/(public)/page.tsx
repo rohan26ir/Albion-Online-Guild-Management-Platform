@@ -5,11 +5,12 @@ import { Hero } from "@/components/pagesComp/Hero";
 import { Pricing } from "@/components/pagesComp/Pricing";
 import TeamShowcase from "@/components/pagesComp/TeamShowcase";
 import { Testimonials } from "@/components/pagesComp/Testimonials";
+import DashboardWidgetDemo from "@/components/pagesComp/DashboardWidgetDemo";
 
 export default function HomePage() {
   const categories = {
     "guild-management": "Guild Management",
-    "gameplay": "Gameplay & PvP", 
+    "gameplay": "Gameplay & PvP",
     "economy": "Economy & Trading",
     "tools": "Platform Tools"
   };
@@ -116,16 +117,36 @@ export default function HomePage() {
         ctaUrl="https://albiononline.com/ref/7N3K5UTRZ7"
       />
 
+
+
       {/* team Showcase */}
       <TeamShowcase />
 
       {/* FAQ */}
-      <FAQ 
+      <FAQ
         title="Frequently Asked Questions"
         subtitle="Everything you need to know"
         categories={categories}
         faqData={faqData}
       />
+
+
+      {/* DashboardWidgetDemo */}
+      <div className="w-full max-w-6xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
+            Master Your Guild's Economy & Warfare
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Real-time insights for your Albion Online guild. Monitor combat, markets, and crafting returns all in one interactive dashboard.
+          </p>
+        </div>
+        <div className="rounded-xl border bg-card text-card-foreground shadow">
+          <div className="p-6">
+            <DashboardWidgetDemo />
+          </div>
+        </div>
+      </div>
 
       {/* Pricing */}
       <Pricing />

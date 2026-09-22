@@ -7,6 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { CookieHub } from "@/components/CookieHub";
 import PopUp from "@/components/shared/PopUp";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Font configurations
 const geistSans = Geist({
@@ -132,6 +134,7 @@ export default function RootLayout({
             <PopUp />
 
             {children}
+            <ToastContainer />
           
           </TooltipProvider>
         </ThemeProvider>

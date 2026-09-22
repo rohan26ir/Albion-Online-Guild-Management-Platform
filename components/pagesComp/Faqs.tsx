@@ -54,7 +54,7 @@ export const FAQ: React.FC<FAQProps> = ({
   return (
     <section
       className={cn(
-        "relative w-full overflow-hidden bg-background/40 px-4 py-12 text-foreground",
+        "relative w-full overflow-hidden bg-background/0 px-4 py-12 text-foreground",
         className
       )}
       {...props}
@@ -93,12 +93,12 @@ const FAQHeader: React.FC<FAQHeaderProps> = ({ title, subtitle }) => (
 
 
     <div className="flex justify-center">
-      <div className="rounded-lg border px-4 py-1 font-mono flex items-center gap-2">
+      <div className="rounded-lg border text-white px-4 py-1 font-mono flex items-center gap-2">
         <IconSword className="size-3" />
         <span>{subtitle}</span>
       </div>
     </div>
-    <h2 className="my-5 text-center text-2xl font-bold tracking-tighter md:text-3xl lg:text-4xl">
+    <h2 className="my-5 text-white text-center text-2xl font-bold tracking-tighter md:text-3xl lg:text-4xl">
       {title}
     </h2>
 
@@ -115,8 +115,8 @@ const FAQTabs: React.FC<FAQTabsProps> = ({ categories, selected, setSelected }) 
         className={cn(
           "relative overflow-hidden whitespace-nowrap rounded-md border px-3 py-1.5 text-sm font-medium transition-colors duration-500",
           selected === key
-            ? "border-primary text-background"
-            : "border-border bg-transparent text-accent hover:text-foreground"
+            ? "border-primary text-white dark:text-red-700  "
+            : "border-border bg-transparent text-white"
         )}
       >
         <span className="relative z-10">{label}</span>

@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import {
   IconBrandFacebook,
@@ -11,6 +15,8 @@ import {
   IconHeart,
 } from "@tabler/icons-react";
 
+import hunterChar from '@/public//assets/charecter/hunter-charecter_with_pet.png'
+
 interface footerProps {
   id: number;
   name: string;
@@ -20,6 +26,17 @@ interface footerProps {
 }
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    if (!email.trim()) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    toast.success("Successfully subscribed to our newsletter!");
+    setEmail("");
+  };
+
   const pages: footerProps[] = [
     { id: 1, name: "Home", path: "/" },
     { id: 2, name: "About", path: "/about" },
@@ -64,13 +81,31 @@ export default function Footer() {
       <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-60" />
 
       {/* Main Footer Content */}
-      <div className="max-w-7xl w-[95%] mx-auto py-8 md:py-10">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="max-w-7xl w-[95%] mx-auto py-8 md:pt-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+          {/* Quick Links */}
+          <div className="flex flex-col items-center text-center space-y-4 order-2 lg:order-1">
+            <h4 className="text-2xl font-semibold uppercase tracking-wider text-foreground">
+              Quick Links
+            </h4>
+            <ul className="space-y-2">
+              {pages.map((page) => (
+                <li key={page.id}>
+                  <Link
+                    href={page.path!}
+                    className="text-lg text-muted-foreground transition-colors duration-200 hover:text-foreground inline-block"
+                  >
+                    {page.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Brand Section with Image */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-
+          <div className="flex flex-col items-center text-center space-y-4 order-1 lg:order-2">
+            <div className="flex flex-col items-center gap-3">
               <div>
                 <h3 className="text-3xl font-bold uppercase tracking-wider text-foreground">
                   Albion Game
@@ -80,11 +115,11 @@ export default function Footer() {
                 </p>
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground max-w-xs md:max-w-sm">
               The all-in-one gaming platform for Albion Online players. Marketplace prices,
               calculators, builds, guild management, and interactive tools.
             </p>
-            <div className="flex gap-2">
+            <div className="flex justify-center gap-2 mt-2">
               {socials.map((social) => (
                 <a
                   key={social.id}
@@ -100,34 +135,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-2xl font-semibold uppercase tracking-wider text-foreground">
-              Quick Links
-            </h4>
-            <ul className="space-y-2">
-              {pages.map((page) => (
-                <li key={page.id}>
-                  <Link
-                    href={page.path!}
-                    className="text-lg text-muted-foreground transition-colors duration-200 hover:text-foreground "
-                  >
-                    {page.name}
-                  </Link>
-                </li>
-              ))}
-
-            </ul>
-          </div>
-
           {/* Contact Information */}
-          <div className="space-y-4">
+          <div className="flex flex-col items-center text-center space-y-4 order-3">
             <h4 className="text-2xl font-semibold uppercase tracking-wider text-foreground">
               Contact Us
             </h4>
             <ul className="space-y-3">
               {contactInfo.map((info) => (
-                <li key={info.id} className="flex items-center gap-2 text-lg text-muted-foreground">
+                <li key={info.id} className="flex items-center justify-center gap-2 text-lg text-muted-foreground">
                   <span className=" text-primary">
                     {getContactIcon(info.name)}
                   </span>
@@ -137,38 +152,56 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter / Version Info */}
-          <div className="space-y-4">
-            <h4 className="text-2xl font-semibold uppercase tracking-wider text-foreground">
-              Stay Updated
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for updates and news.
-            </p>
-            <div className="flex gap-2">
+
+        </div>
+
+        {/* CTA Subscription Banner */}
+        <div className="relative mt-24 rounded-2xl bg-[#0f0f0f] border border-border shadow-2xl overflow-visible flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12 px-6 sm:px-12 md:px-16 py-10 ">
+
+          {/* Character Image (Overflowing top) */}
+          <div className="absolute bottom-0 left-0 sm:left-4 lg:left-12 w-48 h-64 sm:w-64 sm:h-80 lg:w-80 lg:h-[22rem] pointer-events-none hidden sm:block z-20">
+            <Image
+              src={hunterChar}
+              alt="Albion Character"
+              fill
+              className="object-contain object-bottom drop-shadow-xl"
+              priority
+            />
+          </div>
+
+          {/* Spacer for the absolute image on larger screens */}
+          <div className="hidden sm:block w-40 md:w-64 lg:w-72 shrink-0"></div>
+
+          {/* Text Content */}
+          <div className="flex-1 text-center md:text-left z-10 mb-8 md:mb-0 max-w-sm">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-white/90">
+              Join our passionate Albion community today.
+            </h3>
+          </div>
+
+          {/* Subscribe Form */}
+          <div className="w-full md:w-auto z-10 shrink-0">
+            <div className="flex w-full md:w-[350px] lg:w-[400px] bg-white rounded-md overflow-hidden p-1.5 shadow-lg focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="E.g. info@mail.com"
+                className="flex-1 px-4 py-2.5 bg-transparent text-black text-sm outline-none placeholder:text-gray-500 font-medium"
               />
-              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:scale-105">
+              <button
+                onClick={handleSubscribe}
+                className="px-6 py-2.5 bg-[#111] text-white font-semibold text-sm rounded-md transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
                 Subscribe
               </button>
             </div>
-            <div className=" pt-2 text-xs text-muted-foreground flex flex-wrap items-center justify-start gap-2 ">
-              <p className="group">Version: <span className="group-hover:text-lime-500">{version}</span></p> -
-              <p className="group"><span className="group-hover:text-lime-500">© {currentYear}</span>   <a href={companyURl} target="_blank" rel="noopener noreferrer" className="group-hover:text-rose-500">
-                {companyName}
-              </a></p>
-              {/* <p className="mt-1 text-[10px]">
-                Built with <IconHeart size={10} className="inline text-red-500" /> for Albion Community
-              </p> */}
-            </div>
           </div>
+
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 border-t border-border pt-6 text-center">
+        {/* <div className="mt-8 border-t border-border pt-6 text-center">
           <p className="group text-center text-xs sm:text-sm text-muted-foreground/70">
             This web application was created by player{' '}
             <span className="cursor-default font-semibold text-foreground/80 transition-all duration-300 group-hover:text-lime-500 group-hover:drop-shadow-[0_0_8px_rgba(132,204,22,0.3)]">
@@ -180,7 +213,11 @@ export default function Footer() {
             </span>
             .
           </p>
-        </div>
+        </div> */}
+
+        <p className="group text-center pt-5  ">Copyright & develop by <a target="_blank" className="group-hover:text-red-700" href="https://meetrohan.netlify.app/">@rohan26ir</a> - 2026</p>
+
+
       </div>
     </footer>
   );

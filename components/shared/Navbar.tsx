@@ -55,8 +55,7 @@ export default function Navbar() {
     // { name: "Dashboard", href: "/dashboard" },
     { name: "Marketplace", href: "/marketplace" },
     { name: "Tutorials", href: "/tutorials" },
-    { name: "Calculators", href: "/calculators" },
-    { name: "Events", href: "/events" },
+    { name: "Calculators", href: "/dashboard/calculators/crafting" },
   ];
 
   const UserMenuItems: navProps[] = [
@@ -124,25 +123,19 @@ export default function Navbar() {
           ))}
 
           {/* More dropdown (legal etc.) */}
-          <li>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-150 hover:text-foreground hover:bg-accent border border-transparent hover:border-border outline-none">
-                  More
-                  <IconChevronDown size={13} />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                {legalItems.map((item) => (
-                  <DropdownMenuItem key={item.name} asChild>
-                    <Link href={item.href} className="flex items-center gap-2 text-xs">
-                      {item.icon}
-                      {item.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <li className="group relative">
+            <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-150 group-hover:text-foreground group-hover:bg-accent border border-transparent group-hover:border-border outline-none rounded-sm">
+              More
+              <IconChevronDown size={13} className="transition-transform duration-200 group-hover:-rotate-180" />
+            </button>
+            <div className="absolute right-0 top-full hidden group-hover:flex flex-col w-48 bg-popover text-popover-foreground border border-border shadow-md rounded-md overflow-hidden mt-1 z-50">
+              {legalItems.map((item) => (
+                <Link key={item.name} href={item.href} className="flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent hover:text-accent-foreground transition-colors">
+                  {item.icon}
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </li>
         </ul>
 
@@ -183,8 +176,8 @@ export default function Navbar() {
           ) : (
             <Link href="/login">
               <Button size="sm" className="h-8 px-3 text-xs font-semibold uppercase tracking-wider">
-              Sign In
-            </Button>
+                Sign In
+              </Button>
             </Link>
           )}
 

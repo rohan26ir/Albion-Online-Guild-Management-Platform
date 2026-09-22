@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import AboutOurAchievements from "@/components/pagesComp/AboutOurAchievements";
 import AboutOurStory from "@/components/pagesComp/AboutOurStory";
 import AboutOurValues from "@/components/pagesComp/AboutOurValues";
+import AboutBentoGrid from "@/components/pagesComp/AboutBentoGrid";
 import PageCover from "@/components/pagesComp/PageCover";
 
 export const metadata: Metadata = {
@@ -22,15 +23,18 @@ export default function page() {
 
       <div className=" pt-10 flex flex-col gap-12 ">
 
-        {/* content */}
+        {/* Our Story */}
         <AboutOurStory />
 
 
-        <AboutOurValues />
+
+        {/* <AboutOurValues /> */}
 
 
         <AboutOurAchievements />
 
+        {/* Bento Grid Features */}
+        <AboutBentoGrid />
 
 
       </div>

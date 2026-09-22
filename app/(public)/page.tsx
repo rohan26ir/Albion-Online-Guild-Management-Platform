@@ -110,9 +110,9 @@ export default function HomePage() {
     <div className="flex flex-col items-start ">
       {/* hero */}
       <Hero
-        tagline="Albion Game guild hub"
-        title={<>Build. Lead. Grow.</>}
-        description="Manage members, track events, and keep your guild organized from one elegant dashboard."
+        tagline="Built for Every Albion Player"
+        title={<>Everything You Need. <br className="hidden md:block" /> Nothing You Don't.</>}
+        description="Discover smarter ways to play Albion with profit calculators, character builds, marketplace tools, guides, and essential game information."
         ctaText="Play Free Now"
         ctaUrl="https://albiononline.com/ref/7N3K5UTRZ7"
       />

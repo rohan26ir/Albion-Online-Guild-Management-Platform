@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from 'react-toastify';
 import { Button } from "@/components/ui/button";
 import {
   IconBrandGoogle,
@@ -31,7 +32,6 @@ function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -51,7 +51,6 @@ function RegisterForm() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
-    setSuccessMessage("");
 
     if (formData.password.length < 6) {
       setErrorMessage("Password must be at least 6 characters long.");
@@ -80,7 +79,7 @@ function RegisterForm() {
 
       // If Supabase has email confirmation disabled, session is returned immediately
       if (data.session) {
-        setSuccessMessage("Account created successfully! Redirecting...");
+        toast.success("Account created successfully! Redirecting...");
         router.push(redirectTo);
         router.refresh();
         return;
@@ -93,12 +92,12 @@ function RegisterForm() {
       });
 
       if (signInData.session) {
-        setSuccessMessage("Account created! Redirecting to dashboard...");
+        toast.success("Account created! Redirecting to dashboard...");
         router.push(redirectTo);
         router.refresh();
       } else {
         // Fallback message if email confirmation is required by Supabase settings
-        setSuccessMessage("Registration successful! Redirecting to login...");
+        toast.success("Registration successful! Redirecting to login...");
         setTimeout(() => {
           router.push(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
         }, 1200);
@@ -190,13 +189,6 @@ function RegisterForm() {
                 <div className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-200">
                   <IconAlertCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
                   <span className="leading-relaxed">{errorMessage}</span>
-                </div>
-              )}
-
-              {successMessage && (
-                <div className="mb-5 flex items-start gap-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-200">
-                  <IconCheck size={16} className="mt-0.5 shrink-0 text-emerald-400" />
-                  <span className="leading-relaxed">{successMessage}</span>
                 </div>
               )}
 

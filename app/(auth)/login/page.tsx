@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from 'react-toastify';
 import { Button } from "@/components/ui/button";
 import {
   IconBrandGoogle,
@@ -56,6 +57,7 @@ function LoginForm() {
       }
 
       if (data.session) {
+        toast.success("Login successful!");
         router.push(redirectTo);
         router.refresh();
       } else {

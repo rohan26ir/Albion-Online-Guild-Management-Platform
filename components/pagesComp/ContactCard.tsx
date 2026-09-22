@@ -2,6 +2,7 @@
 
 import { FaFacebookF, FaLinkedinIn, FaTwitter, FaPlus as PlusIcon } from "react-icons/fa6";
 import { FaPhone, FaEnvelope, FaLocationDot } from "react-icons/fa6";
+import { toast } from 'react-toastify';
 
 interface ContactInfo {
   title?: string;
@@ -14,7 +15,7 @@ export default function ContactCard() {
   const contactInfo: ContactInfo[] = [
     { title: "Phone", value: "+1 (555) 123-4567", icon: <FaPhone /> },
     { title: "Email", value: "support@example.com", icon: <FaEnvelope /> },
-    { title: "Address", value: "123 Main St, City", icon: <FaLocationDot /> },
+    { title: "Address", value: "asia server, Fort Sterling, Royal", icon: <FaLocationDot /> },
   ];
 
   const socialLinks: ContactInfo[] = [
@@ -32,7 +33,7 @@ export default function ContactCard() {
     const data = Object.fromEntries(formData.entries());
     console.log("Form data:", data);
     
-    alert("Form submitted successfully!");
+    toast.success("Form submitted successfully!");
     e.currentTarget.reset(); // Reset the form after submission
   };
 
@@ -40,7 +41,7 @@ export default function ContactCard() {
     <div className="max-w-7xl w-[95%] mx-auto">
       <div>
         {/* form container */}
-        <div className="bg-card border relative grid h-full w-full shadow md:grid-cols-2 lg:grid-cols-3">
+        <div className="bg-card border relative grid h-full w-full shadow lg:grid-cols-3">
           {/* Corner decoration icons */}
           <PlusIcon className="absolute -top-3 -left-3 h-6 w-6" />
           <PlusIcon className="absolute -top-3 -right-3 h-6 w-6" />
@@ -48,7 +49,7 @@ export default function ContactCard() {
           <PlusIcon className="absolute -bottom-3 -right-3 h-6 w-6" />
 
           {/* left - Contact Info */}
-          <div className="flex flex-col justify-between lg:col-span-2">
+          <div className="flex flex-col justify-between lg:col-span-1 border-b lg:border-b-0 lg:border-r">
             <div className="relative h-full space-y-4 px-4 py-8 md:p-8">
               <h2 className="text-3xl font-bold md:text-4xl lg:text-5xl">
                 Stay in Touch
@@ -99,44 +100,46 @@ export default function ContactCard() {
           </div>
 
           {/* right - Form */}
-          <div className="bg-muted/40 flex h-full w-full items-center border-t p-5 md:col-span-1 md:border-t-0 md:border-l">
+          <div className="bg-muted/40 flex h-full w-full items-center p-5 md:p-8 lg:col-span-2">
             <form 
               onSubmit={handleSubmit}
-              className="flex flex-col gap-4 w-full"
+              className="flex flex-col gap-6 w-full"
             >
-              {/* Name */}
-              <div>
-                <label htmlFor="name" className="mb-1 block text-sm font-medium text-muted-foreground">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="Enter your name"
-                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                />
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Name */}
+                <div>
+                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-muted-foreground">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Enter your name"
+                    className="w-full rounded-md border border-input bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    required
+                  />
+                </div>
 
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="mb-1 block text-sm font-medium text-muted-foreground">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Enter your email"
-                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                />
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-muted-foreground">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    className="w-full rounded-md border border-input bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    required
+                  />
+                </div>
               </div>
 
               {/* Subject */}
               <div>
-                <label htmlFor="subject" className="mb-1 block text-sm font-medium text-muted-foreground">
+                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-muted-foreground">
                   Subject
                 </label>
                 <input
@@ -144,32 +147,34 @@ export default function ContactCard() {
                   name="subject"
                   id="subject"
                   placeholder="Enter subject"
-                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-md border border-input bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>
 
               {/* Message */}
               <div>
-                <label htmlFor="message" className="mb-1 block text-sm font-medium text-muted-foreground">
+                <label htmlFor="message" className="mb-2 block text-sm font-medium text-muted-foreground">
                   Message
                 </label>
                 <textarea
                   name="message"
                   id="message"
-                  rows={4}
+                  rows={5}
                   placeholder="Enter your message"
-                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                  className="w-full rounded-md border border-input bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                   required
                 />
               </div>
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Send Message
-              </button>
+              <div className="flex justify-start">
+                <button
+                  type="submit"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-6 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Send Message
+                </button>
+              </div>
             </form>
           </div>
         </div>

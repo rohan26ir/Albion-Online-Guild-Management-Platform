@@ -31,14 +31,14 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
 }) => {
   const FADE_IN_ANIMATION_VARIANTS: Variants = {
     hidden: { opacity: 0, y: 10 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        type: "spring", 
-        stiffness: 100, 
-        damping: 20 
-      } 
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20
+      }
     },
   };
 
@@ -62,21 +62,21 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
   return (
     <section
       className={cn(
-        "relative w-full h-[60lvh] md:h-[90lvh] 2xl:h-lvh overflow-hidden rounded-lg text-center px-4",
+        "relative w-full h-[60lvh] md:h-[95lvh] 2xl:h-lvh overflow-hidden rounded-lg text-center px-4",
         className
       )}
     >
       <div className="absolute inset-0 -z-10 brightness-75">
         <div className="absolute inset-0 bg-linear-to-br from-black/80 via-black/60 to-black/70" />
-        <Image 
-          src={herobg} 
-          alt="Albion Online Background" 
+        <Image
+          src={herobg}
+          alt="Albion Online Background"
           fill
           className="object-cover brightness-35"
           priority
         />
       </div>
-      
+
       <div className="relative z-10 flex flex-col items-center mt-auto h-full pt-10 2xl:pt-20">
         {/* Tagline */}
         <motion.div
@@ -93,7 +93,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           initial="hidden"
           animate="show"
           variants={STAGGER_CHILDREN_VARIANTS}
-          className="text-5xl md:text-7xl font-bold tracking-normal text-white "
+          className="text-6xl md:text-8xl lg:text-[5rem] 2xl:text-[7rem] font-bold tracking-tight leading-none md:leading-[0.95] text-white "
         >
           {typeof title === 'string' ? (
             title.split(" ").map((word, i) => (
@@ -116,7 +116,7 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           animate="show"
           variants={FADE_IN_ANIMATION_VARIANTS}
           transition={{ delay: 0.5 }}
-          className="mt-2 max-w-xl text-lg text-gray-300"
+          className="hidden 2xl:block   mt-2 max-w-2xl text-lg text-gray-300"
         >
           {description}
         </motion.p>
@@ -129,10 +129,10 @@ export const Hero: React.FC<AnimatedMarqueeHeroProps> = ({
           transition={{ delay: 0.6 }}
           className="-mt-5 md:mt-5 2xl:mt-10"
         >
-          {ctaUrl ? 
+          {ctaUrl ?
             <Link href={ctaUrl} target="_blank">
               <ButtonLight>{ctaText}</ButtonLight>
-            </Link> : 
+            </Link> :
             <ButtonLight>{ctaText}</ButtonLight>
           }
         </motion.div>

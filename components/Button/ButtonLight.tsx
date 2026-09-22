@@ -1,54 +1,44 @@
-export default function ButtonLight({ 
-  children, 
-  onClick 
-}: { 
-  children: React.ReactNode; 
+export default function ButtonLight({
+  children,
+  onClick
+}: {
+  children: React.ReactNode;
   onClick?: () => void;
 }) {
   return (
     <button
       onClick={onClick}
-      className="group relative flex flex-col items-center justify-center w-[180px] h-[50px] decoration-0 transition-transform active:scale-95 cursor-pointer outline-none bg-white/5 rounded-lg border-none p-0"
+      className="overflow-hidden group relative flex flex-col items-center justify-center w-[180px] h-[50px] decoration-0 transition-transform active:scale-95 cursor-pointer outline-none bg-white/0 rounded-lg border-none p-0 isolate"
+      style={{ transform: "translateZ(0)" }}
       type="button"
     >
-      {/* Glow */}
+      {/* 1. Base glow and static stroke effects behind the button content */}
       <div
-        className="absolute inset-0 pointer-events-none transition-opacity ease-in-out duration-[1200ms] opacity-100 group-hover:opacity-0 rounded-lg"
+        className="absolute inset-0 pointer-events-none transition-opacity ease-in-out duration-[1200ms] opacity-100 rounded-lg"
         style={{
           background: "radial-gradient(15% 50% at 50% 100%, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%)",
           filter: "blur(15px)"
         }}
       />
-
-      {/* Glow Hover */}
       <div
-        className="absolute inset-0 pointer-events-none transition-opacity ease-in-out duration-[1200ms] opacity-0 group-hover:opacity-100 rounded-lg"
-        style={{
-          background: "radial-gradient(60.6% 50% at 50% 100%, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%)",
-          filter: "blur(18px)"
-        }}
-      />
-
-      {/* Stroke */}
-      <div
-        className="absolute inset-0 pointer-events-none will-change-auto transition-opacity ease-in-out duration-[1200ms] opacity-100 group-hover:opacity-0 rounded-lg"
+        className="absolute inset-0 pointer-events-none will-change-auto transition-opacity ease-in-out duration-[1200ms] opacity-100 rounded-lg"
         style={{
           background: "radial-gradient(10.7% 50% at 50% 100%, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%)"
         }}
       />
 
-      {/* Stroke Hover */}
-      <div
-        className="absolute inset-0 pointer-events-none will-change-auto transition-opacity ease-in-out duration-[1200ms] opacity-0 group-hover:opacity-100 rounded-lg"
-        style={{
-          background: "radial-gradient(60.1% 50% at 50% 100%, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%)"
-        }}
-      />
+      {/* 2. Animated rotating dot border created with a spinning conic gradient */}
+      <div className="absolute inset-0 z-0 overflow-hidden rounded-lg pointer-events-none">
+        <div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square animate-[spin_3s_linear_infinite]"
+          style={{
+            background: "conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.8) 100%)"
+          }}
+        />
+      </div>
 
-      {/* Fill */}
-      <div
-        className="absolute inset-px pointer-events-none z-10 rounded-[7px] bg-black"
-      />
+      {/* 3. Black fill with 1px inset to reveal the underlying animated border and stroke */}
+      <div className="absolute inset-px pointer-events-none z-10 rounded-[7px] bg-black" />
 
       {/* Text Content */}
       <div className="relative z-20 flex flex-col items-center justify-center">

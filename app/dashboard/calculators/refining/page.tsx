@@ -5,6 +5,7 @@ import {
   AlbionItem,
   GLOBAL_ALBION_ITEMS,
   CraftingIngredient,
+  getRemoteItemIcon,
 } from "@/data/global-items";
 import { AlbionItemSelectModal } from "@/components/albion/shared/AlbionItemSelectModal";
 import {
@@ -54,9 +55,9 @@ export default function RefiningCalculatorPage() {
   // Preload initial refining item: Cedar Planks (Tier 5)
   const initialRefineItem =
     GLOBAL_ALBION_ITEMS.find(
-      (i) => i.category === "Refining" && i.identifier === "T5_PLANKS" && i.enchantment === 0
+      (i) => (i.category === "Crafting" || (i.category as string) === "Refining") && i.identifier === "T5_PLANKS" && i.enchantment === 0
     ) ||
-    GLOBAL_ALBION_ITEMS.find((i) => i.category === "Refining") ||
+    GLOBAL_ALBION_ITEMS.find((i) => i.category === "Crafting" || (i.category as string) === "Refining") ||
     GLOBAL_ALBION_ITEMS[0];
 
   const [refineItems, setRefineItems] = useState<SelectedRefineItem[]>([
@@ -389,7 +390,7 @@ export default function RefiningCalculatorPage() {
 
           {isRecentDropdownOpen && (
             <div className="absolute left-0 top-full mt-1.5 w-64 bg-popover text-popover-foreground border border-border rounded-md shadow-2xl z-40 py-1 max-h-64 overflow-y-auto">
-              {GLOBAL_ALBION_ITEMS.filter((i) => i.category === "Refining")
+              {GLOBAL_ALBION_ITEMS.filter((i) => i.category === "Crafting" || (i.category as string) === "Refining")
                 .slice(0, 8)
                 .map((item) => (
                   <button
@@ -474,7 +475,10 @@ export default function RefiningCalculatorPage() {
                             alt={ci.item.name}
                             className="w-10 h-10 object-contain"
                             onError={(e) => {
-                              e.currentTarget.style.display = "none";
+                              const remoteUrl = getRemoteItemIcon(ci.item.identifier, ci.item.enchantment);
+                              if (e.currentTarget.src !== remoteUrl) {
+                                e.currentTarget.src = remoteUrl;
+                              }
                             }}
                           />
                           <div className="absolute top-0.5 left-0.5 px-1 py-0.2 bg-rose-900 text-white text-[9px] font-bold font-mono rounded-xs shadow">
@@ -618,7 +622,10 @@ export default function RefiningCalculatorPage() {
                             alt={ing.name}
                             className="w-10 h-10 object-contain"
                             onError={(e) => {
-                              e.currentTarget.style.display = "none";
+                              const remoteUrl = getRemoteItemIcon(ing.identifier, ing.enchantment || 0);
+                              if (e.currentTarget.src !== remoteUrl) {
+                                e.currentTarget.src = remoteUrl;
+                              }
                             }}
                           />
                           <div
@@ -770,7 +777,7 @@ export default function RefiningCalculatorPage() {
         onSelectItem={handleAddItem}
         title="Refining Resource Catalog"
         actionLabel="Select"
-        initialCategory="Refining"
+        initialCategory="Crafting"
       />
     </div>
   );
